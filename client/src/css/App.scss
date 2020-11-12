@@ -1,0 +1,482 @@
+/*@import url('https://fonts.googleapis.com/css2?family=Muli:wght@300;400;700&display=swap');*/
+@font-face {
+    font-family: 'Muli-Regular';
+    src: url('./Muli-Regular.ttf');
+}
+
+/*VARIABLES SETUP*/
+$irrigateBackground: darkgreen;
+$irrigateFontColor: beige;
+$causeListWidth: 1110px;
+$causeFontColor: #454545;
+
+.app {
+  /*font-family: 'Muli-Regular', sans-serif;*/
+  font-family: 'Roboto', sans-serif;
+  padding: 0px;
+}
+
+.form-input{
+  margin: 10px 0px;
+}
+
+.Navbar{
+  width: 100%;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  background: $irrigateBackground;
+  color: $irrigateFontColor;
+  border: 0 transparent;
+  border-bottom: 3px solid;
+  border-image-source: linear-gradient(0deg,orange,darkgreen);
+  border-image-slice: 1;
+}
+.NavbarLeftCorner{
+  display: flex;
+  margin: 0 0 0 10px;
+  letter-spacing: 4px;
+}
+.NavbarLogo{
+  width: 55px;
+  height: 55px;
+  margin: auto 10px;
+}
+.NavbarRightCorner{
+  display: flex;
+  flex-direction: row;
+  margin: auto 0px;
+}
+.displayFormAddUserButton{
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  width: 100px;
+  height: 50px;
+  font-weight: bold;
+  background-color: $irrigateBackground;
+  color: $irrigateFontColor;
+  border: 1px solid $irrigateBackground;
+  border-radius: 15px;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.5s;
+}
+.displayFormAddUserButton:hover{
+  color: white;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.displayFormLoginUserButton{
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  width: 100px;
+  height: 50px;
+  font-weight: bold;
+  background-color: $irrigateBackground;
+  color: $irrigateFontColor;
+  border: 1px solid $irrigateBackground;
+  border-radius: 15px;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.5s;
+}
+.displayFormLoginUserButton:hover{
+  color: white;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.FormAddUser{
+  position: fixed;
+  background: white;
+  width: 400px;
+  margin: 0;
+  padding: 0px 20px 20px 20px;
+  left: 35%;
+  /*transform: translateX(-50%);*/
+  top: 20%;
+  border: 1px solid $irrigateBackground;
+  border-radius: 15px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  color: grey;
+}
+.FormAddUser input{
+  width: 75%;
+}
+.FormAddUserTitle_Close{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.FormAddUserTitle{
+  font-size: xx-large;
+  font-weight: bold;
+  color: $irrigateBackground;
+  margin: 10px 0px 20px 0px;
+}
+.closeFormAddUserButton{
+  background: white;
+  color: grey;
+  font-size: large;
+  font-weight: bold;
+  border: none;
+  outline: none;
+  height: 10px;
+  margin-top: 10px;
+}
+.closeFormAddUserButton:hover{
+  cursor: pointer;
+}
+.Logout{
+  margin: auto;
+}
+.LogoutButton{
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  width: 100px;
+  font-weight: bold;
+  background-color: $irrigateBackground;
+  color: $irrigateFontColor;
+  border: 1px solid $irrigateBackground;
+  border-radius: 15px;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.5s;
+}
+.LogoutButton:hover{
+  color: white;
+  cursor: pointer;
+}
+
+
+.HomeDescription{
+  width: 100%;
+  height: 300px;
+  display: flex;
+  background: burlywood;
+  color: darkgreen;
+  font-size: larger;
+  border: 0 transparent;
+  border-bottom: 5px solid;
+  border-image-source: linear-gradient(145deg,green,orange);
+  border-image-slice: 1;
+}
+.HomeDescriptionContainer{
+  width: 80%;
+  margin: auto auto;
+  display: flex;
+  justify-content: space-between;
+}
+.displayFormAddCauseButton{
+  position: absolute;
+  left: 80%;
+  top: 300px;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  width: 200px;
+  height: 50px;
+  font-weight: bold;
+  background-color: $irrigateBackground;
+  color: $irrigateFontColor;
+  border: 1px solid $irrigateBackground;
+  border-radius: 15px;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.5s;
+}
+.displayFormAddCauseButton:hover{
+  background-color: $irrigateFontColor;
+  color: $irrigateBackground;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.FormAddCause{
+  position: absolute;
+  background: white;
+  width: 700px;
+  margin: 0;
+  padding: 0 0 20px 0;
+  left: 25%;
+  /*transform: translateX(-50%);*/
+  top: 10%;
+  border: 1px solid $irrigateBackground;
+  border-radius: 15px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+}
+.FormAddCauseTitle_Close{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 95%;
+  margin: 10px auto;
+}
+.FormAddCauseTitle{
+  font-size: xx-large;
+  font-weight: bold;
+  color: $irrigateBackground;
+  margin: 10px 0px 20px 0px;
+}
+.closeFormAddCauseButton{
+  background: transparent;
+  color: grey;
+  font-size: large;
+  font-weight: bold;
+  border: none;
+  outline: none;
+  height: 10px;
+  position: absolute;
+  right: 1px;
+  top: 1px;
+  border-radius: 15px;
+}
+.closeFormAddCauseButton:hover{
+  cursor: pointer;
+}
+.FormAddCauseFields{
+  padding: 0 4%;
+  width: 92%;
+  color: grey;
+  font-weight: bold;
+}
+.FormAddCauseFields textarea,
+.FormAddCauseFields input{
+  width: 75%;
+}
+.FormAddCauseButton{
+  margin: 20px 0 0 0;
+  padding: 0 0 0 0;
+  width: 200px;
+  height: 30px;
+  font-weight: bold;
+  background-color: $irrigateBackground;
+  color: $irrigateFontColor;
+  border: 1px solid $irrigateBackground;
+  border-radius: 15px;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.5s;
+}
+.FormAddCauseButton:hover{
+  cursor: pointer;
+}
+.FormAddCauseButtonFileLabel{
+  cursor: pointer;
+  min-height: 30px;
+  max-height: 30px;
+  background: darkgreen;
+  padding: 8px 30px 8px;
+  border-radius: 15px;
+  color: white;
+  font-size: 14px;
+  display: table-cell;
+}
+.FormAddCauseButtonFile{
+  display: none;
+}
+
+.Stream{
+  position: fixed;
+  background: white;
+  width: 700px;
+  margin: 0;
+  padding: 15px;
+  left: 25%;
+  /*transform: translateX(-50%);*/
+  top: 20px;
+  border: 1px solid $irrigateBackground;
+  border-radius: 15px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  color: grey;
+}
+.StreamTitle{
+  font-size: xx-large;
+  font-weight: bold;
+  color: $irrigateBackground;
+  margin: 0px 0px 20px 0px;
+}
+.setStreamForm{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 20px 0 20px 0;
+}
+.setStreamForm * {
+  margin: 0;
+}
+.userCausesContainer{
+  display: flex;
+}
+.closeUserCauseButton{
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: grey;
+}
+.donateOnceForm{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 20px 0 20px 0;
+}
+.donateOnceForm * {
+  margin: 0;
+  padding: 0;
+}
+.donateOnceContainer{
+  border-top: 1px solid green;
+  border-bottom: 1px solid green;
+  margin: 30px 0 0 0;
+  padding: 10px 0 10px 0;
+}
+
+.irrigateCausesList{
+  width: 100%;
+  background: white;
+  padding: 20px 0;
+  color: $causeFontColor;
+}
+.causesListFilterContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: $causeListWidth;
+  margin: 0 auto 20px auto;
+  font-weight: bold;
+  border-bottom: 1px solid grey;
+}
+.filterAndLogoContainer{
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  -webkit-transition: .2s ease-in-out;
+  transition: .2s ease-in-out;
+}
+.filterAndLogoContainer:hover{
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+  color: $irrigateBackground;
+}
+.causeFilterLogo{
+  width: 40px;
+  height: 40px;
+  margin: auto 5px auto 0px;
+  cursor: pointer;
+}
+.causesListFilterTitle{
+  color: $irrigateBackground;
+  font-weight: bold;
+  cursor: default;
+}
+.causesListFilterName:hover{
+  color: $irrigateBackground;
+  font-weight: bold;
+  cursor: pointer;
+}
+.causesListContainer{
+  width: $causeListWidth;
+  min-height: 100vh;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+.causeDisplay{
+  width: 30%;
+  border: 1px solid lightgrey;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 8px;
+  background: white;
+  -webkit-transition: .2s ease-in-out;
+  transition: .2s ease-in-out;
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  transition-property: box-shadow, transform;
+}
+.causeDisplay:hover{
+  box-shadow: 10px 10px 10px -10px rgba(0, 0, 0, 0.5);
+  -webkit-transform: scale(1.02);
+  transform: scale(1.02);
+}
+.causeLogoContainer{
+  max-height: 180px;
+  height: 180px;
+  max-width: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+.causeLogo{
+  display: block;
+  max-width: 100%;
+  max-height: 180px;
+  width: auto;
+  height: auto;
+}
+.causeNumber{
+  color: $irrigateBackground;
+  font-weight: bold;
+}
+.addCauseToYourListButton{
+  margin: 0 auto;
+  padding: 0 0 0 0;
+  width: 100%;
+  height: 30px;
+  font-weight: bold;
+  background-color: $irrigateBackground;
+  color: $irrigateFontColor;
+  border: 1px solid $irrigateBackground;
+  border-radius: 15px;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.5s;
+}
+.addCauseToYourListButton:hover{
+  cursor: pointer;
+  background-color: $irrigateFontColor;
+  color: $irrigateBackground;
+  border: 1px solid $irrigateBackground;
+}
+
+.Footer{
+  width: 100%;
+  background: $irrigateBackground;
+  color: $irrigateFontColor;
+  font-size: larger;
+  border: 0 transparent;
+  border-top: 3px solid;
+  border-image-source: linear-gradient(180deg,orange,darkgreen);
+  border-image-slice: 1;
+}
+.FooterContainer{
+  display: flex;
+  height: 80px;
+  justify-content: center;
+}
+.FooterLogo{
+  width: 55px;
+  height: 55px;
+  margin: auto 0px;
+}
+.FooterDescription{
+  font-weight: bolder;
+  margin: auto 0px;
+  display: flex;
+}
+.githubLogo{
+  outline: none;
+  color: $irrigateFontColor;
+  text-decoration: none;
+}
