@@ -29,7 +29,6 @@ abstract contract Context {
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
 
-// import "../GSN/Context.sol";
 /**
  * @dev Contract module which provides a basic access control mechanism, where
  * there is an account (an owner) that can be granted exclusive access to
@@ -95,7 +94,7 @@ contract Ownable is Context {
 }
 
 // Irrigate main contract
-pragma solidity ^0.7.4;
+pragma solidity ^0.6.0;
 
 contract IrrigateMain is Ownable {
   event CauseAddressRegistered(address indexed causeAddress, string message);
@@ -104,24 +103,24 @@ contract IrrigateMain is Ownable {
   event DonationsDistributed(string message);
   event PODSentToDonor(address indexed donorAddress, string message);
 
-	constructor() internal {
+	constructor() public {
 	}
 
-	function () external payable {}
+	receive () external payable {}
 
 	function registerCauseAddress(address _causeAddress) public onlyOwner {
     emit CauseAddressRegistered(_causeAddress, "Registration successfull");
-	};
+	}
 	function modifyCauseAddress(address _causeAddress) public onlyOwner {
     emit CauseAddressModified(_causeAddress, "Modification successfull");
-	};
+	}
 	function deleteCauseAddress(address _causeAddress) public onlyOwner {
     emit CauseAddressDeleted(_causeAddress, "Removal successfull");
-	};
+	}
 	function distributeDonations() public onlyOwner {
     emit DonationsDistributed("Donations distribution successfull");
-	};
+	}
 	function sendDonorPOD(address _donorAddress) public onlyOwner {
     emit PODSentToDonor(_donorAddress, "POD sent");
-	};
+	}
 }
