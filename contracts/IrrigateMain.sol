@@ -97,9 +97,13 @@ contract Ownable is Context {
 pragma solidity ^0.6.0;
 
 contract IrrigateMain is Ownable {
-  event CauseAddressRegistered(address indexed causeAddress, string message);
-  event CauseAddressModified(address indexed causeAddress, string message);
-  event CauseAddressDeleted(address indexed causeAddress, string message);
+	mapping(address => bool) public causeAddressList;
+	mapping(address => uint) public genericDonations;
+	mapping(address => uint) public specificDonations;
+
+  event SetCauseAddress(address indexed causeAddress, string message);
+  event GenericDonationSaved(address indexed donorAddress, uint amount, string message);
+  event SpecificDonationSaved(address indexed receiver, uint amount, string message);
   event DonationsDistributed(string message);
   event PODSentToDonor(address indexed donorAddress, string message);
 
@@ -108,18 +112,34 @@ contract IrrigateMain is Ownable {
 
 	receive () external payable {}
 
-	function registerCauseAddress(address _causeAddress) public onlyOwner {
-    emit CauseAddressRegistered(_causeAddress, "Registration successfull");
+	function setCauseAddress(address _causeAddress, bool _status) public onlyOwner {
+		require(_causeAddress != address(0), "Not valid address");
+
+		causeAddressList[_causeAddress] = _status;
+    emit SetCauseAddress(_causeAddress, "Setting cause address successfull");
 	}
-	function modifyCauseAddress(address _causeAddress) public onlyOwner {
-    emit CauseAddressModified(_causeAddress, "Modification successfull");
+
+	function saveGenericDonation(address _donorAddress, uint _amount) public onlyOwner {
+		require(_donor != address(0), "Not valid address");
+	
+		genericDonations[_donor] = _amount;
+		emit GenericDonationSaved(_donorAddress, _amount, "Generic donation saved");
 	}
-	function deleteCauseAddress(address _causeAddress) public onlyOwner {
-    emit CauseAddressDeleted(_causeAddress, "Removal successfull");
+
+	function saveSpecificDonation(address _donorAddress, address _receiver, uint _amount) public onlyOwner {
+		require(_donorAddress != address(0), "Not valid donor address");
+		require(_receiver != address(0), "Not valid receiver address");
+		require(causeAddressList[_receiver] == true, "Not active receiver address");
+
+		uint newBalance = specificDonations[receiver] + _amount;
+		specificDonations[receiver] = newBalance;
+		emit SpecificDonationSaved(_receiver, _amount, "Specific donation saved");  
 	}
+
 	function distributeDonations() public onlyOwner {
     emit DonationsDistributed("Donations distribution successfull");
 	}
+
 	function sendDonorPOD(address _donorAddress) public onlyOwner {
     emit PODSentToDonor(_donorAddress, "POD sent");
 	}
