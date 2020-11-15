@@ -120,9 +120,9 @@ contract IrrigateMain is Ownable {
 	}
 
 	function saveGenericDonation(address _donorAddress, uint _amount) public onlyOwner {
-		require(_donor != address(0), "Not valid address");
+		require(_donorAddress != address(0), "Not valid address");
 	
-		genericDonations[_donor] = _amount;
+		genericDonations[_donorAddress] = _amount;
 		emit GenericDonationSaved(_donorAddress, _amount, "Generic donation saved");
 	}
 
@@ -131,8 +131,8 @@ contract IrrigateMain is Ownable {
 		require(_receiver != address(0), "Not valid receiver address");
 		require(causeAddressList[_receiver] == true, "Not active receiver address");
 
-		uint newBalance = specificDonations[receiver] + _amount;
-		specificDonations[receiver] = newBalance;
+		uint newBalance = specificDonations[_receiver] + _amount;
+		specificDonations[_receiver] = newBalance;
 		emit SpecificDonationSaved(_receiver, _amount, "Specific donation saved");  
 	}
 
