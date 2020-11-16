@@ -18,13 +18,22 @@
  *
  */
 
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+require("dotenv").config();
 // const HDWalletProvider = require('@truffle/hdwallet-provider');
 // const infuraKey = "fj4jll3k.....";
 //
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
+const GAS_LIMIT = 8e6;
 
 module.exports = {
+  plugins: [
+    //"truffle-security",
+    "solidity-coverage",
+    "truffle-plugin-verify"
+  ],
+  
   /**
    * Networks define how you connect to your ethereum client and let you set the
    * defaults web3 uses to send transactions. If you don't specify one truffle
@@ -46,6 +55,22 @@ module.exports = {
      host: "127.0.0.1",     // Localhost (default: none)
      port: 8545,            // Standard Ethereum port (default: none)
      network_id: "*",       // Any network (default: none)
+    },
+
+    goerli: {
+      provider: () => new HDWalletProvider(
+        process.env.GOERLI_MNEMONIC,
+        process.env.GOERLI_PROVIDER_URL,
+        0, //address_index
+        10, // num_addresses
+        true // shareNonce
+      ),
+      network_id: 5, // Goerli's id
+      gas: GAS_LIMIT,
+      gasPrice: +process.env.GOERLI_GAS_PRICE || 10e9, // 10 GWEI
+      //confirmations: 6, // # of confs to wait between deployments. (default: 0)
+      timeoutBlocks: 50, // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: false // Skip dry run before migrations? (default: false for public nets )
     },
 
     // Another network with more advanced options...

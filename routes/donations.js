@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken')
 const Batch = require('../models/batch')
 const upload = multer ({  }).single('file')
 const checkAuth = require('../middleware/check-auth')
-const HDWalletProvider = require('truffle-hdwallet-provider')
+const HDWalletProvider = require('@truffle/hdwallet-provider')
 const Web3 = require('web3')
 require('dotenv').config()
 
@@ -17,7 +17,7 @@ const ropstenProvider = process.env.INFPROVIDER
 const provider = new HDWalletProvider(seed, ropstenProvider)
 const web3 = new Web3(provider)
 const irrigateAddress = '0xC1f1B00Ca70bB54a4d2BC95d07f2647889E2331a'
-const mockDaiContractAbi = require('../contracts/MockDAI.json')
+const mockDaiContractAbi = require('../contracts_old/MockDAI.json')
 const mockDaiContractAddress = '0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108'
 const mockDaiContractInstance = new web3.eth.Contract(mockDaiContractAbi, mockDaiContractAddress)
 

@@ -10,9 +10,21 @@ const routes = require('./routes/api')
 const userRoutes = require('./routes/user')
 const donationsRoutes = require('./routes/donations')
 
+const superfluidFunctions = require('./functions/superfluidFunctions')
 const aaveFunctions = require('./functions/aaveFunctions')
 const causesFunctions = require('./functions/causesFunctions')
 const interestsFunctions = require('./functions/interestsFunctions')
+
+async function initSF() {
+	await superfluidFunctions.sfStart()
+	await superfluidFunctions.sfMintDai("1000")
+	await superfluidFunctions.sfGetDaiBalance()
+	await superfluidFunctions.sfApproveDaix()
+	await superfluidFunctions.sfUpgradeDaix("1000")
+	await superfluidFunctions.sfCreateIndex(1001)
+}
+initSF()
+
 
 //Database connection
 const PORT = process.env.PORT || 8080
