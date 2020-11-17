@@ -366,6 +366,15 @@ $causeFontColor: #454545;
   transform: scale(1.1);
   color: $irrigateBackground;
 }
+.filterAndLogoContainerActive{
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  /*-webkit-transition: .2s ease-in-out;
+  transition: .2s ease-in-out;*/
+  border-bottom: 5px solid $irrigateBackground;
+  color: $irrigateBackground;
+}
 .causeFilterLogo{
   width: 40px;
   height: 40px;

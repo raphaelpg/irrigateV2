@@ -148,31 +148,31 @@ class CausesList extends Component {
           <div className="filterTitleContainer">
             <p className="causesListFilterTitle">Category:</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} title="All">
+          <div className={this.state.category_filter === "All" ? 'filterAndLogoContainerActive' : 'filterAndLogoContainer'} onClick={this.handleCategoryClick} title="All">
             <img className="causeFilterLogo" name="All" src={planet} alt="earth logo"></img>
             <p className="causesListFilterName" >All</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} title="Animal Protection">
+          <div className={this.state.category_filter === "Animal Protection" ? 'filterAndLogoContainerActive' : 'filterAndLogoContainer'} onClick={this.handleCategoryClick} title="Animal Protection">
             <img className="causeFilterLogo" name="Animal Protection" src={animal} alt="animal logo"></img>
             <p className="causesListFilterName" >Animal Protection</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} title="Health">
+          <div className={this.state.category_filter === "Health" ? 'filterAndLogoContainerActive' : 'filterAndLogoContainer'} onClick={this.handleCategoryClick} title="Health">
             <img className="causeFilterLogo" name="Health" src={health} alt="health logo"></img>
             <p className="causesListFilterName" >Health</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} title="Development">
+          <div className={this.state.category_filter === "Development" ? 'filterAndLogoContainerActive' : 'filterAndLogoContainer'} onClick={this.handleCategoryClick} title="Development">
             <img className="causeFilterLogo" name="Development" src={development} alt="development logo"></img>
             <p className="causesListFilterName" >Development</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} title="Environment">
+          <div className={this.state.category_filter === "Environment" ? 'filterAndLogoContainerActive' : 'filterAndLogoContainer'} onClick={this.handleCategoryClick} title="Environment">
             <img className="causeFilterLogo" name="Environment" src={environment} alt="environment logo"></img>
             <p className="causesListFilterName" >Environment</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} title="Education">
+          <div className={this.state.category_filter === "Education" ? 'filterAndLogoContainerActive' : 'filterAndLogoContainer'} onClick={this.handleCategoryClick} title="Education">
             <img className="causeFilterLogo" name="Education" src={education} alt="education logo"></img>
             <p className="causesListFilterName" >Education</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} title="Human Rights">
+          <div className={this.state.category_filter === "Human Rights" ? 'filterAndLogoContainerActive' : 'filterAndLogoContainer'} onClick={this.handleCategoryClick} title="Human Rights">
             <img className="causeFilterLogo" name="Human Rights" src={human_rights} alt="human_rights logo"></img>
             <p className="causesListFilterName" >Human Rights</p>
           </div>
@@ -181,31 +181,31 @@ class CausesList extends Component {
           <div className="filterTitleContainer">
             <p className="causesListFilterTitle">Location:</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleLocationClick} title="Anywhere">
+          <div className={this.state.location_filter === "Anywhere" ? 'filterAndLogoContainerActive' : 'filterAndLogoContainer'} onClick={this.handleLocationClick} title="Anywhere">
             <img className="causeFilterLogo" name="Anywhere" src={globe} alt="globe logo"></img>
             <p className="causesListFilterName" >Anywhere</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleLocationClick} title="Africa">
+          <div className={this.state.location_filter === "Africa" ? 'filterAndLogoContainerActive' : 'filterAndLogoContainer'} onClick={this.handleLocationClick} title="Africa">
             <img className="causeFilterLogo" name="Africa" src={africa} alt="africa continent logo"></img>
             <p className="causesListFilterName" >Africa</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleLocationClick} title="America">
+          <div className={this.state.location_filter === "America" ? 'filterAndLogoContainerActive' : 'filterAndLogoContainer'} onClick={this.handleLocationClick} title="America">
             <img className="causeFilterLogo" name="America" src={america} alt="america continent logo"></img>
             <p className="causesListFilterName" >America</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleLocationClick} title="Asia">
+          <div className={this.state.location_filter === "Asia" ? 'filterAndLogoContainerActive' : 'filterAndLogoContainer'} onClick={this.handleLocationClick} title="Asia">
             <img className="causeFilterLogo" name="Asia" src={asia} alt="asia continent logo"></img>
             <p className="causesListFilterName" >Asia</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleLocationClick} title="Europe">
+          <div className={this.state.location_filter === "Europe" ? 'filterAndLogoContainerActive' : 'filterAndLogoContainer'} onClick={this.handleLocationClick} title="Europe">
             <img className="causeFilterLogo" name="Europe" src={europe} alt="europe continent logo"></img>
             <p className="causesListFilterName" >Europe</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleLocationClick} title="Oceania">
+          <div className={this.state.location_filter === "Oceania" ? 'filterAndLogoContainerActive' : 'filterAndLogoContainer'} onClick={this.handleLocationClick} title="Oceania">
             <img className="causeFilterLogo" name="Oceania" src={oceania} alt="oceania continent logo"></img>
             <p className="causesListFilterName" >Oceania</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleLocationClick} title="Poles">
+          <div className={this.state.location_filter === "Poles" ? 'filterAndLogoContainerActive' : 'filterAndLogoContainer'} onClick={this.handleLocationClick} title="Poles">
             <img className="causeFilterLogo" name="Poles" src={poles} alt="iceberg logo representing north and south poles"></img>
             <p className="causesListFilterName" >Poles</p>
           </div>
