@@ -17,11 +17,6 @@ const interestsFunctions = require('./functions/interestsFunctions')
 
 async function initSF() {
 	await superfluidFunctions.sfStart()
-	await superfluidFunctions.sfMintDai("1000")
-	await superfluidFunctions.sfGetDaiBalance()
-	await superfluidFunctions.sfApproveDaix()
-	await superfluidFunctions.sfUpgradeDaix("1000")
-	await superfluidFunctions.sfCreateIndex(1001)
 }
 initSF()
 

@@ -19,49 +19,50 @@ const sf = new SuperfluidSDK.Framework({
 module.exports = {
 
 	sfStart: async function() {
-		await sf.initialize();
+		//init sf
+		await sf.initialize()
 		console.log("Superfluid initialized")
-	},
 
-	sfGetAddresses: async function() {
-		const daiAddress = await sf.resolver.get("tokens.fDAI")
-		const dai = await sf.contracts.TestToken.at(daiAddress)
-		const daixWrapper = await sf.getERC20Wrapper(dai)
-		// assert(daixWrapper.created)
-		const daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress)
-		console.log("daiAddress: ", daiAddress)
-		console.log("daixWrapper: ", daixWrapper)
-	},
-
-	sfMintDai: async function(_amount) {
-		const daiAddress = await sf.resolver.get("tokens.fDAI")
-		const dai = await sf.contracts.TestToken.at(daiAddress)
-		dai.mint(irrigateAddress, web3.utils.toWei(_amount, "ether"), { from: irrigateAddress })
-		console.log(_amount, " dai minted")
-	},
-
-	sfGetDaiBalance: async function() {
-		const daiAddress = await sf.resolver.get("tokens.fDAI")
-		const dai = await sf.contracts.TestToken.at(daiAddress)
-		const irrigateBalance = (wad4human(await dai.balanceOf(irrigateAddress)))
-		console.log("irrigateBalance: ", irrigateBalance)
-	},
-
-	sfGetDaiX: async function() {
+		//get addresses
 		const daiAddress = await sf.resolver.get("tokens.fDAI")
 		const dai = await sf.contracts.TestToken.at(daiAddress)
 		const daixWrapper = await sf.getERC20Wrapper(dai)
 		const daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress)
-		console.log("daix address: ", daix.address)
-	},
+		console.log("Dai contract address: ", daiAddress)
+		console.log("Daix wrapper address: ", daixWrapper.wrapperAddress)
 
-	sfApproveDaix: async function() {
-		const daiAddress = await sf.resolver.get("tokens.fDAI")
-		const dai = await sf.contracts.TestToken.at(daiAddress)
-		const daixWrapper = await sf.getERC20Wrapper(dai)
-		const daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress)
-		await dai.approve(daix.address, "1"+"0".repeat(42), { from: irrigateAddress })
-		console.log("daix approved")
+		//check mock dai app's balance
+		const daiBalance = wad4human(await dai.balanceOf(irrigateAddress))
+		const daiBalanceTarget = 10100
+		if (daiBalance < daiBalanceTarget) {
+			let mintAmount = (daiBalanceTarget - daiBalance).toString() 
+			dai.mint(irrigateAddress, web3.utils.toWei(mintAmount, "ether"), { from: irrigateAddress })	
+			console.log("Dai minted")
+		}
+		const newDaiBalance = wad4human(await dai.balanceOf(irrigateAddress))
+		console.log("Dai balance: ", newDaiBalance)
+
+		//verify if daix is approved
+		const daixAllowance = wad4human(await dai.allowance(irrigateAddress, daix.address))
+		if (daixAllowance == 0) {
+			dai.approve(daix.address, "1"+"0".repeat(42), { from: irrigateAddress })
+			console.log("Daix approved")
+		} else {
+			console.log("Daix already approved")
+		}
+
+		//check if publishing index exists
+		const idaAddress = await sf.agreements.ida.address
+		const idaContract = await sf.contracts.IInstantDistributionAgreementV1.at(idaAddress)
+		const indexID = 1002
+		const response = await idaContract.getIndex(daix.address, irrigateAddress, indexID)
+		if (response.exist != true) {
+			await sf.host.callAgreement(sf.agreements.ida.address, sf.agreements.ida.contract.methods.createIndex(daix.address, indexID, "0x").encodeABI(), { from: irrigateAddress })
+			console.log("Publishing index created, id: ", indexID)
+		} else {
+			console.log("Publishing index exists, id: ", indexID)
+		}
+		console.log("Irrigate initialization successful")
 	},
 
 	sfUpgradeDaix: async function(_amount) {

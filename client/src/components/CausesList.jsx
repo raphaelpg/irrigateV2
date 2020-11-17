@@ -48,7 +48,7 @@ class CausesList extends Component {
     }
     else if (this.state.category_filter === 'All' && this.state.location_filter !== 'Anywhere') {
       let result = causes.filter(cause => {
-        return (cause.continent === this.state.location_filter || cause.continent === 'Worldwide')
+        return (cause.continent === this.state.location_filter /*|| cause.continent === 'Worldwide'*/)
       })
       return result.map( (cause, index) => (
         <Fade duration={1000} key={index}>
@@ -93,7 +93,7 @@ class CausesList extends Component {
       ))  
     }
     else if (this.state.category_filter !== 'All' && this.state.location_filter !== 'Anywhere') {
-      let result = causes.filter(cause => cause.category === this.state.category_filter && (cause.continent === this.state.location_filter || cause.continent === 'Worldwide'))
+      let result = causes.filter(cause => cause.category === this.state.category_filter && (cause.continent === this.state.location_filter /*|| cause.continent === 'Worldwide'*/))
       return result.map( (cause, index) => (
         <Fade duration={1000} key={index}>
           <div className="causeDisplay">
