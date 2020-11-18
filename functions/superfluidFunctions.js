@@ -20,7 +20,7 @@ module.exports = {
 	sfStart: async function(_indexID) {
 		//init sf
 		await sf.initialize()
-		console.log("Superfluid initialized")
+		console.log("Superfluid initializing")
 
 		//get addresses
 		const daiAddress = await sf.resolver.get("tokens.fDAI")
@@ -64,13 +64,27 @@ module.exports = {
 		console.log("Superfluid initialization successful")
 	},
 
-	sfUpgradeDaix: async function(_amount) {
+	sfApproveDaix: async function(_userAddress) {
 		const daiAddress = await sf.resolver.get("tokens.fDAI")
 		const dai = await sf.contracts.TestToken.at(daiAddress)
 		const daixWrapper = await sf.getERC20Wrapper(dai)
 		const daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress)
-		await daix.upgrade(web3.utils.toWei(_amount, "ether"), { from: irrigateAddress })
-		console.log("daix upgraded by ", _amount)
+		const daixAllowance = wad4human(await dai.allowance(_userAddress, daix.address))
+		if (daixAllowance == 0) {
+			dai.approve(daix.address, "1"+"0".repeat(42), { from: _userAddress })
+			console.log("Daix approved")
+		} else {
+			console.log("Daix already approved")
+		}
+	},	
+
+	sfUpgradeDaix: async function(_amount, _fromAddress) {
+		const daiAddress = await sf.resolver.get("tokens.fDAI")
+		const dai = await sf.contracts.TestToken.at(daiAddress)
+		const daixWrapper = await sf.getERC20Wrapper(dai)
+		const daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress)
+		await daix.upgrade(web3.utils.toWei(_amount, "ether"), { from: _fromAddress })
+		console.log("daix upgraded by ", _amount, "from", _fromAddress)
 	},
 
 	sfCreateIndex: async function(_indexNumber) {

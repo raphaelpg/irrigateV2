@@ -89,7 +89,7 @@ class Stream extends Component {
   }
 
 	render() {
-
+    // console.log(this.props)
     let Stream = (
       <Zoom duration={300}>
         <div className="Stream"> 

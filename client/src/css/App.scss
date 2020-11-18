@@ -300,6 +300,16 @@ $causeFontColor: #454545;
   color: $irrigateBackground;
   margin: 0px 0px 20px 0px;
 }
+.connectWalletButton{
+  margin-right: 10%;
+  background-color: orange;
+  border: none;
+  border-radius: 20px;
+  width: 160px;
+  height: 40px;
+  cursor: pointer;
+  outline: none;
+}
 .setStreamForm{
   display: flex;
   flex-direction: row;

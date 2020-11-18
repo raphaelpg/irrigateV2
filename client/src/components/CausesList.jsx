@@ -142,7 +142,7 @@ class CausesList extends Component {
   }
 
 	render() {
-    console.log(this.state)
+    // console.log(this.state)
 		return (
 			<div className="irrigateCausesList">
         <div className="causesListFilterContainer">

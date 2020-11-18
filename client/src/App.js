@@ -179,6 +179,9 @@ class App extends React.Component {
 
   displayStreamAndConnectWallet = async () => {
     this.setState({ displayStream:true })
+  }
+
+  async connectWallet() {
     try {
       const web3 = await getWeb3();
 
@@ -197,7 +200,7 @@ class App extends React.Component {
         mockDaiContract: instanceDAI,
       })
     } catch (error) {
-      alert(`No wallet detected or wrong network.\nAdd a crypto wallet such as Metamask to your browser and switch it to Ropsten network.`);
+      // alert(`No wallet detected or wrong network.\nAdd a crypto wallet such as Metamask to your browser and switch it to Ropsten network.`);
     } 
   }
 
@@ -231,6 +234,7 @@ class App extends React.Component {
             <h1 className="Title">IRRIGATE</h1>
           </div>
           <div className="NavbarRightCorner">
+            <button className="connectWalletButton" onClick={this.connectWallet}>Connect wallet</button>
             {FormAddUserButton}
             {FormUserConnected}
             <FormAddUser 
@@ -255,6 +259,7 @@ class App extends React.Component {
               mockDaiContract={ this.state.mockDaiContract }
               userCausesId={ this.state.userCausesId }
               removeCauseFromUserList={ this.removeCauseFromUserList }
+              connectWallet={ this.connectWallet }
             />
           </div>
         </div> 

@@ -48,7 +48,7 @@ async function launcher(indexID) {
 	// await superfluidFunctions.sfUpdateSubscription(indexID, '0x0A51e5F32dE5dE418eF54670b992F1cb75f80a65')
 	// await superfluidFunctions.sfApproveSubscription(indexID, '0x0A51e5F32dE5dE418eF54670b992F1cb75f80a65')
 	// await superfluidFunctions.sfDistributeDonations(indexID, 2000, 6)
-	await superfluidFunctions.sfDowngradeTotal('0x1A7e2a64920B245F6951b674dFcc4105ea6d39f8')
+	// await superfluidFunctions.sfDowngradeTotal('0x1A7e2a64920B245F6951b674dFcc4105ea6d39f8')
 
 	//Function for batch time management, launched each 1st and 15th of every month at 00h01:
 	//Redeem DAIs, perform transfers, deposit DAIs
