@@ -55,6 +55,7 @@ module.exports = {
      host: "127.0.0.1",     // Localhost (default: none)
      port: 8545,            // Standard Ethereum port (default: none)
      network_id: "*",       // Any network (default: none)
+
     },
 
     goerli: {
@@ -62,7 +63,7 @@ module.exports = {
         process.env.GOERLI_MNEMONIC,
         process.env.GOERLI_PROVIDER_URL,
         0, //address_index
-        10, // num_addresses
+        35, // num_addresses
         true // shareNonce
       ),
       network_id: 5, // Goerli's id

@@ -38,6 +38,7 @@ class CausesList extends Component {
             <p>Activity's location: {cause.continent}, {cause.country}</p>
             <p>{cause.description}</p>
             <a href={cause.link} target="_blank" rel="noopener noreferrer">{cause.link}</a>
+            <p className="causeAddress">Eth address: {cause.address}</p>
             <p className="causeNumber">Monthly donors: 2000 persons</p>
             <p className="causeNumber">Monthly donations: 1500 DAI</p>
             <p className="causeNumber">Total funds raised: 23500 DAI</p>
