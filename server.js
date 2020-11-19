@@ -108,7 +108,7 @@ async function launcher(indexID) {
 		});
 	})*/
 }
-launcher(1002)
+//launcher(1002)
 
 
 //Heroku check

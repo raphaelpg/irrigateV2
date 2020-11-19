@@ -1,5 +1,6 @@
 import React from 'react'
-import getWeb3 from './utils/getWeb3'
+// import getWeb3 from './utils/getWeb3'
+import Web3 from 'web3';
 import axios from 'axios'
 import './css/App.scss'
 import MockDAI from './contracts/MockDAI.json'
@@ -12,9 +13,15 @@ import FormLogIn from './components/FormLogIn'
 import Stream from './components/Stream'
 import Logout from './components/Logout'
 const logo = require('./components/planet.png')
+const { wad4human } = require('@decentral.ee/web3-helpers')
+const SuperfluidSDK = require('@superfluid-finance/ethereum-contracts')
+const TruffleContract = require('@truffle/contract')
+
+let dai;
+let daix;
+let sf;
 
 class App extends React.Component {
-
   state = {
     causes: [],
     displayFormAddCause: false,
@@ -31,7 +38,8 @@ class App extends React.Component {
     web3: null,
     network: '',
     accounts: null,
-    irrigateAddress: '0xC1f1B00Ca70bB54a4d2BC95d07f2647889E2331a',
+    accountsDaiBalance: '0',
+    irrigateAddress: '0xFC94FFAf800FcF5B146ceb4fc1C37dB604305ae5',
     mockDaiAddress: '0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108',
     mockDaiContract: null,
   }
@@ -181,31 +189,114 @@ class App extends React.Component {
     this.setState({ displayStream:true })
   }
 
-  async connectWallet() {
+  connectWallet = async () => {
     try {
-      const web3 = await getWeb3();
+      // const web3 = await getWeb3();
+      let web3;
+      if(window.ethereum){
+        web3 = new Web3(window.ethereum)
+        await window.ethereum.enable()
+      } else if(window.web3) {
+        web3 = new Web3(window.web3.currentProvider)
+      }
+
+      sf = new SuperfluidSDK.Framework({
+          version: "0.1.2-preview-20201014", // This is for using different protocol release
+          web3Provider: web3.currentProvider // your web3 provider
+      });
+
+      await sf.initialize()
+
+      const daiAddress = await sf.resolver.get("tokens.fDAI");
+      dai = await sf.contracts.TestToken.at(daiAddress);
+      const daixWrapper = await sf.getERC20Wrapper(dai);
+      daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress);
+
+      global.web3 = sf.web3;
+
+      const accounts = await sf.web3.eth.getAccounts();
 
       await web3.eth.net.getNetworkType((err, network) => {
         this.setState({network: network})
       })
-      const accounts = await web3.eth.getAccounts()
-      const instanceDAI = new web3.eth.Contract(
+      // const accounts = await web3.eth.getAccounts()
+      /*const instanceDAI = new web3.eth.Contract(
         MockDAI,
         this.state.mockDaiAddress,
-      )
+      )*/
 
       this.setState({
         web3,
         accounts,
-        mockDaiContract: instanceDAI,
+        mockDaiContract: dai,
       })
     } catch (error) {
-      // alert(`No wallet detected or wrong network.\nAdd a crypto wallet such as Metamask to your browser and switch it to Ropsten network.`);
+      alert(`No wallet detected or wrong network.\nAdd a crypto wallet such as Metamask to your browser and switch it to Ropsten network.`);
     } 
   }
 
-  render() {
+  mintDAI = async() => {
+    const mockDaiContract = this.state.mockDaiContract
+    const userAddress = this.state.accounts[0]
+    //mint some dai here!  100 default amount
+    await dai.mint(
+      userAddress,
+      sf.web3.utils.toWei("100", "ether"),
+      { from: userAddress }
+    );
+    this.setState({
+      accountsDaiBalance: (wad4human(await mockDaiContract.balanceOf.call(userAddress))),
+    })
+  }
 
+  approveDAI = async() => {
+    const userAddress = this.state.accounts[0]
+    await dai
+      .approve(
+        daix.address,
+        "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+        { from: userAddress }
+      )
+/*      .then(async i =>
+        setDAIapproved(
+          wad4human(await dai.allowance.call(userAddress, daix.address))
+        )
+      );*/
+  }
+
+  upgradeDAIx = async() => {
+    const userAddress = this.state.accounts[0]
+    await daix
+      .upgrade(
+        sf.web3.utils.toWei("10", "ether"),
+        { from: userAddress }
+      )
+  }
+
+  createCFA = async() => {
+    const userAddress = this.state.accounts[0]
+    const recipient = this.state.irrigateAddress
+    await sf.host.callAgreement(
+      sf.agreements.cfa.address,
+      sf.agreements.cfa.contract.methods
+        .createFlow(daix.address, recipient, "385802469135802", "0x")//10 per month
+        .encodeABI(),
+      { from: userAddress })
+  }
+
+  stopCFA = async() => {
+    const userAddress = this.state.accounts[0]
+    const recipient = this.state.irrigateAddress
+    await sf.host.callAgreement(
+      sf.agreements.cfa.address,
+      sf.agreements.cfa.contract.methods
+        .deleteFlow(daix.address, userAddress, recipient, "0x")
+        .encodeABI(),
+      { from: userAddress })
+  }
+
+  render() {
+    console.log(this.state)
     let FormAddUserButton = (
       <div className="NavbarRightCorner">
         <button className="displayFormAddUserButton description" onClick={(e) => this.setState({ displayFormAddUser:true })}>Sign up</button>
@@ -234,7 +325,12 @@ class App extends React.Component {
             <h1 className="Title">IRRIGATE</h1>
           </div>
           <div className="NavbarRightCorner">
-            <button className="connectWalletButton" onClick={this.connectWallet}>Connect wallet</button>
+            <button className="connectWalletButton" onClick={ this.connectWallet }>{this.state.accounts === null ? ("Connect wallet") : ("Disconnect wallet") }</button>
+            <button className="connectWalletButton" onClick={ this.mintDAI }>Mint DAI</button>
+            <button className="connectWalletButton" onClick={ this.approveDAI }>Approve DAI</button>
+            <button className="connectWalletButton" onClick={ this.upgradeDAIx }>Upgrade DAIx</button>
+            <button className="connectWalletButton" onClick={ this.createCFA }>Create CFA</button>
+            <button className="connectWalletButton" onClick={ this.stopCFA }>Stop CFA</button>
             {FormAddUserButton}
             {FormUserConnected}
             <FormAddUser 
@@ -260,6 +356,7 @@ class App extends React.Component {
               userCausesId={ this.state.userCausesId }
               removeCauseFromUserList={ this.removeCauseFromUserList }
               connectWallet={ this.connectWallet }
+              mintDAI={ this.mintDAI }
             />
           </div>
         </div> 

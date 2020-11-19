@@ -102,6 +102,8 @@ class Stream extends Component {
             {this.displayUserCauses(this.props.userCauses)}
           </div>
 
+          <button onClick={this.props.mintDAI}>Mint DAI</button>
+
           <div className="donateOnceContainer">
             <form className="donateOnceForm" onSubmit={this.donateOnce} >
               <label>Donation value: </label>
