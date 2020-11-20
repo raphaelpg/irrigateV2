@@ -3,18 +3,19 @@ import Zoom from 'react-reveal/Zoom'
 import axios from 'axios';
 import getWeb3 from '../utils/getWeb3';
 
-class Stream extends Component {
+class Subscription extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
       newStreamAmount: '',
-      donateOnceAmount: '5'
+      donateOnceAmount: '5',
+      subscriptionAmount: 0
 		};
 	}
 
   handleChange = ({ target }) => {
     const { name, value } = target
-    this.setState({ [name]: value })
+    this.setState({ [name]: Number(value) })
   }
 
   displayUserCauses = (userCauses) => {
@@ -89,29 +90,32 @@ class Stream extends Component {
   }
 
 	render() {
-    // console.log(this.props)
-    let Stream = (
+    console.log(this.state)
+    let Subscription = (
       <Zoom duration={300}>
         <div className="Stream"> 
           <div className="StreamTitle_Close">
-            <p className="StreamTitle">Your current stream:</p>
-            <button className="closeFormAddCauseButton" onClick={this.props.closeStream}>x</button>
+            <p className="StreamTitle">Support causes around the world:</p>
+            <button className="closeFormAddCauseButton" onClick={this.props.closeSubscription}>x</button>
           </div>
-          <div>Your supported causes:</div>
+          {/*<div>Your supported causes:</div>*/}
           <div className="userCausesContainer">
             {this.displayUserCauses(this.props.userCauses)}
           </div>
 
-          <button className="streamButton" onClick={ this.props.mintDAI }>Mint DAI</button>
-          <button className="streamButton" onClick={ () => this.props.batchCall(10) }>Batch 10</button>
-          <button className="streamButton" onClick={ () => this.props.batchCall(20) }>Batch 20</button>
-          <button className="streamButton" onClick={ () => this.props.batchCall(50) }>Batch 50</button>
-          <button className="streamButton" onClick={ () => this.props.batchCall(100) }>Batch 100</button>
-          <button className="streamButton" onClick={ () => this.props.batchCall(200) }>Batch 200</button>
-          <button className="streamButton" onClick={ () => this.props.batchCall(500) }>Batch 500</button>
-          <button className="streamButton" onClick={ this.props.stopCFA }>Unsubscribe</button>
+          {/*<button className="streamButton" onClick={ this.props.mintDAI }>Mint DAI</button>*/}
+          <div className="subscriptionAmountContainer">
+            <button className="subscriptionAmountButton" name="subscriptionAmount" onClick={ this.handleChange } value="10" >10 DAI</button>
+            <button className="subscriptionAmountButton" name="subscriptionAmount" onClick={ this.handleChange } value="20" >20 DAI</button>
+            <button className="subscriptionAmountButton" name="subscriptionAmount" onClick={ this.handleChange } value="50" >50 DAI</button>
+            <button className="subscriptionAmountButton" name="subscriptionAmount" onClick={ this.handleChange } value="100" >100 DAI</button>
+            <button className="subscriptionAmountButton" name="subscriptionAmount" onClick={ this.handleChange } value="200" >200 DAI</button>
+            <button className="subscriptionAmountButton" name="subscriptionAmount" onClick={ this.handleChange } value="500" >500 DAI</button>
+          </div>
+          <button className="FormAddCauseButton" onClick={ () => this.props.batchCall(this.state.subscriptionAmount)}>Give {this.state.subscriptionAmount} DAI monthly</button>
+          <button className="FormAddCauseButton" name="subscriptionAmount" onClick={ this.props.stopCFA }>Cancel subscription</button>
 
-          <div className="donateOnceContainer">
+ {/*         <div className="donateOnceContainer">
             <form className="donateOnceForm" onSubmit={this.donateOnce} >
               <label>Donation value: </label>
               <div className="form-input">
@@ -126,9 +130,9 @@ class Stream extends Component {
               </div>
               <button className="FormAddCauseButton">Donate once</button>
             </form>
-          </div>
+          </div>*/}
 
-          <div>
+          {/*<div>
             <p className="">Your current stream: {this.props.currentStreamAmount} DAI / month</p>
             <form className="setStreamForm" onSubmit={this.setStreamAmount} >
               <label>Set monthly donation to: </label>
@@ -144,21 +148,21 @@ class Stream extends Component {
               </div>
               <button className="FormAddCauseButton">Set amount</button>
             </form>
-          </div>
+          </div>*/}
         </div>
       </Zoom>
 		)
 
-    if (! this.props.displayStream) {
-      Stream = null;
+    if (! this.props.displaySubscription) {
+      Subscription = null;
     }
 
     return (
       <div>
-        {Stream}
+        {Subscription}
       </div>
     )
 	}
 }
 
-export default Stream;
+export default Subscription;

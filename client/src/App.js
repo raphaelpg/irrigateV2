@@ -11,6 +11,7 @@ import Footer from './components/Footer'
 import FormAddUser from './components/FormAddUser'
 import FormLogIn from './components/FormLogIn'
 import Stream from './components/Stream'
+import Subscription from './components/Subscription'
 import Logout from './components/Logout'
 const logo = require('./components/planet.png')
 const { wad4human } = require('@decentral.ee/web3-helpers')
@@ -31,6 +32,7 @@ class App extends React.Component {
     displayFormAddUser: false,
     displayFormLogIn: false,
     displayStream: false,
+    displaySubscription: false,
     userCausesId: [],
     userCauses: [],
     currentStreamAmount: '0',
@@ -66,17 +68,17 @@ class App extends React.Component {
 
   checkSessionStorage = async () => {
     try {
-        const sessionUserAuth = await sessionStorage.getItem('userAuth')
-        const sessionUserToken = await sessionStorage.getItem('userToken')
-        this.setState({ userAuth: sessionUserAuth, userToken: sessionUserToken })
-        if (sessionUserAuth === 'true') {
-          this.setState({ userStatus: 'Connected' })
-          this.getUserData()
-        } else {
-          this.setState({ userStatus: '' })
-        }
+      const sessionUserAuth = await sessionStorage.getItem('userAuth')
+      const sessionUserToken = await sessionStorage.getItem('userToken')
+      this.setState({ userAuth: sessionUserAuth, userToken: sessionUserToken })
+      if (sessionUserAuth === 'true') {
+        this.setState({ userStatus: 'Connected' })
+        this.getUserData()
+      } else {
+        this.setState({ userStatus: '' })
+      }
     } catch (e) {
-        console.log(e)
+      console.log(e)
     }
   }
 
@@ -189,6 +191,10 @@ class App extends React.Component {
     this.setState({ displayStream:true })
   }
 
+  displaySubscription = async () => {
+    this.setState({ displaySubscription:true })
+  }
+
   connectWallet = async () => {
     try {
       // const web3 = await getWeb3();
@@ -295,6 +301,25 @@ class App extends React.Component {
       { from: userAddress })
   }
 
+  batchCall = async(_amount) => {
+    const userAddress = this.state.accounts[0]
+    const recipient = this.state.irrigateAddress
+    const amount = _amount.toString()
+    const amountPerSecond = (Math.floor((_amount)*(10**18)/(3600*24*30))).toString()
+    let batch = new sf.web3.BatchRequest()
+    const userAllowance = wad4human(await dai.allowance.call(userAddress, daix.address))
+    if (userAllowance === 0) {
+      batch.add(dai.approve(daix.address,"115792089237316195423570985008687907853269984665640564039457584007913129639935",{ from: userAddress }))
+    }
+    batch.add(daix.upgrade(sf.web3.utils.toWei(amount, "ether"),{ from: userAddress }))
+    batch.add(sf.host.callAgreement(sf.agreements.cfa.address,sf.agreements.cfa.contract.methods.createFlow(daix.address, recipient, amountPerSecond, "0x").encodeABI(),{ from: userAddress }))
+    try {
+      batch.execute()
+    } catch(err) {
+      console.log(err)
+    }
+  }
+
   render() {
     console.log(this.state)
     let FormAddUserButton = (
@@ -306,7 +331,8 @@ class App extends React.Component {
 
     let FormUserConnected = (
       <div className="NavbarRightCorner">
-        <button className="displayFormAddUserButton description" onClick={ this.displayStreamAndConnectWallet }>Manage your stream</button>
+        {/*<button className="displayFormAddUserButton description" onClick={ this.displayStreamAndConnectWallet }>Manage your stream</button>*/}
+        <button className="displayFormAddUserButton description" onClick={ this.displaySubscription }>Manage your subscription</button>
         <Logout checkSessionStorage={ this.checkSessionStorage } />
       </div>
     )
@@ -327,10 +353,11 @@ class App extends React.Component {
           <div className="NavbarRightCorner">
             <button className="connectWalletButton" onClick={ this.connectWallet }>{this.state.accounts === null ? ("Connect wallet") : ("Disconnect wallet") }</button>
             <button className="connectWalletButton" onClick={ this.mintDAI }>Mint DAI</button>
-            <button className="connectWalletButton" onClick={ this.approveDAI }>Approve DAI</button>
-            <button className="connectWalletButton" onClick={ this.upgradeDAIx }>Upgrade DAIx</button>
-            <button className="connectWalletButton" onClick={ this.createCFA }>Create CFA</button>
-            <button className="connectWalletButton" onClick={ this.stopCFA }>Stop CFA</button>
+            {/*<button className="connectWalletButton" onClick={ this.approveDAI }>Approve DAI</button>*/}
+            {/*<button className="connectWalletButton" onClick={ this.upgradeDAIx }>Upgrade DAIx</button>*/}
+            {/*<button className="connectWalletButton" onClick={ this.createCFA }>Create CFA</button>*/}
+            {/*<button className="connectWalletButton" onClick={ () => this.batchCall(10) }>Batch</button>*/}
+            {/*<button className="connectWalletButton" onClick={ this.stopCFA }>Stop CFA</button>*/}
             {FormAddUserButton}
             {FormUserConnected}
             <FormAddUser 
@@ -344,7 +371,7 @@ class App extends React.Component {
                 this.checkSessionStorage()
               }}
             />
-            <Stream
+            {/*<Stream
               displayStream={ this.state.displayStream } 
               closeStream={ (e) => this.setState({ displayStream:false }) }
               userCauses={ this.state.userCauses }
@@ -355,8 +382,22 @@ class App extends React.Component {
               mockDaiContract={ this.state.mockDaiContract }
               userCausesId={ this.state.userCausesId }
               removeCauseFromUserList={ this.removeCauseFromUserList }
-              connectWallet={ this.connectWallet }
               mintDAI={ this.mintDAI }
+              batchCall={ this.batchCall }
+              stopCFA={ this.stopCFA }
+            />*/}
+            <Subscription
+              displaySubscription={ this.state.displaySubscription } 
+              closeSubscription={ (e) => this.setState({ displaySubscription:false }) }
+              currentStreamAmount={ this.state.currentStreamAmount }
+              getUserData={ this.getUserData }
+              irrigateAddress={ this.state.irrigateAddress }
+              accounts={ this.state.accounts }
+              mockDaiContract={ this.state.mockDaiContract }
+              userCausesId={ this.state.userCausesId }
+              mintDAI={ this.mintDAI }
+              batchCall={ this.batchCall }
+              stopCFA={ this.stopCFA }
             />
           </div>
         </div> 
