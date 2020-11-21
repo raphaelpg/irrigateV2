@@ -308,10 +308,10 @@ class App extends React.Component {
     const amountPerSecond = (Math.floor((_amount)*(10**18)/(3600*24*30))).toString()
     let batch = new sf.web3.BatchRequest()
     const userAllowance = wad4human(await dai.allowance.call(userAddress, daix.address))
-    if (userAllowance === 0) {
-      batch.add(dai.approve(daix.address,"115792089237316195423570985008687907853269984665640564039457584007913129639935",{ from: userAddress }))
-    }
-    batch.add(daix.upgrade(sf.web3.utils.toWei(amount, "ether"),{ from: userAddress }))
+    // if (userAllowance === 0) {
+    //   batch.add(dai.approve(daix.address,"115792089237316195423570985008687907853269984665640564039457584007913129639935",{ from: userAddress }))
+    // }
+    // batch.add(daix.upgrade(sf.web3.utils.toWei(amount, "ether"),{ from: userAddress }))
     batch.add(sf.host.callAgreement(sf.agreements.cfa.address,sf.agreements.cfa.contract.methods.createFlow(daix.address, recipient, amountPerSecond, "0x").encodeABI(),{ from: userAddress }))
     try {
       batch.execute()

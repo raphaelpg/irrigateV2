@@ -9,7 +9,7 @@ class HomeDescription extends Component {
 				<div className="HomeDescriptionContainer">
 					<div className="HomeDescriptionLeft">
 						<Fade bottom duration={1000}>
-		        	<h2 className="HomeDescriptionLeftTitle">Browse and select projects by purpose</h2>
+		        	<h2 className="HomeDescriptionLeftTitle">Browse and select associations by causes and locations</h2>
 						</Fade>
 	        </div>
 	        <div className="HomeDescriptionRight">

@@ -9,6 +9,7 @@ $irrigateBackground: darkgreen;
 $irrigateFontColor: beige;
 $causeListWidth: 1110px;
 $causeFontColor: #454545;
+$standardShadow: 3px 3px 10px 0px grey;
 
 .app {
   /*font-family: 'Muli-Regular', sans-serif;*/
@@ -31,6 +32,8 @@ $causeFontColor: #454545;
   border-bottom: 3px solid;
   border-image-source: linear-gradient(0deg,orange,darkgreen);
   border-image-slice: 1;
+  position: fixed;
+  z-index: 99999;
 }
 .NavbarLeftCorner{
   display: flex;
@@ -51,7 +54,7 @@ $causeFontColor: #454545;
   margin: 0 0 0 0;
   padding: 0 0 0 0;
   width: 100px;
-  height: 50px;
+  /*height: 50px;*/
   font-weight: bold;
   background-color: $irrigateBackground;
   color: $irrigateFontColor;
@@ -161,12 +164,16 @@ $causeFontColor: #454545;
   border-bottom: 5px solid;
   border-image-source: linear-gradient(145deg,green,orange);
   border-image-slice: 1;
+  padding-top: 80px;
 }
 .HomeDescriptionContainer{
   width: 80%;
   margin: auto auto;
   display: flex;
   justify-content: space-between;
+}
+.HomeDescriptionLeft{
+  margin: 0 5% 0 0;
 }
 .displayFormAddCauseButton{
   position: absolute;
@@ -180,16 +187,17 @@ $causeFontColor: #454545;
   background-color: $irrigateBackground;
   color: $irrigateFontColor;
   border: 1px solid $irrigateBackground;
-  border-radius: 15px;
+  border-radius: 5px;
   letter-spacing: 1px;
   outline: none;
   transition: all 0.5s;
+  box-shadow: $standardShadow;
 }
 .displayFormAddCauseButton:hover{
   background-color: $irrigateFontColor;
   color: $irrigateBackground;
   border: none;
-  border-radius: 15px;
+  border-radius: 5px;
   cursor: pointer;
 }
 .FormAddCause{
@@ -282,10 +290,11 @@ $causeFontColor: #454545;
   background-color: $irrigateBackground;
   color: $irrigateFontColor;
   border: 1px solid $irrigateBackground;
-  border-radius: 15px;
+  border-radius: 5px;
   letter-spacing: 1px;
   outline: none;
   transition: all 0.5s;
+  box-shadow: $standardShadow;
 }
 .FormAddCauseButton:hover{
   cursor: pointer;
@@ -313,13 +322,14 @@ $causeFontColor: #454545;
   padding: 15px;
   left: 25%;
   /*transform: translateX(-50%);*/
-  top: 20px;
-  border: 1px solid $irrigateBackground;
-  border-radius: 15px;
+  top: 100px;
+  /*border: 1px solid $irrigateBackground;*/
+  border-radius: 5px;
   z-index: 9999;
   display: flex;
   flex-direction: column;
   color: grey;
+  box-shadow: $standardShadow;
 }
 .StreamTitle{
   font-size: xx-large;
@@ -331,7 +341,7 @@ $causeFontColor: #454545;
   margin-right: 1%;
   background-color: orange;
   border: none;
-  border-radius: 20px;
+  border-radius: 5px;
   width: 100px;
   height: 40px;
   cursor: pointer;
@@ -442,7 +452,7 @@ $causeFontColor: #454545;
   border: 1px solid lightgrey;
   margin: 5px;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: 5px;
   background: white;
   -webkit-transition: .2s ease-in-out;
   transition: .2s ease-in-out;
