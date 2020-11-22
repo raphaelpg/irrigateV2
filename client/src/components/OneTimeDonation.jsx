@@ -3,13 +3,11 @@ import Zoom from 'react-reveal/Zoom'
 import axios from 'axios';
 import getWeb3 from '../utils/getWeb3';
 
-class Subscription extends Component {
+class OneTimeDonation extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-      newStreamAmount: '',
-      donateOnceAmount: '5',
-      subscriptionAmount: 0
+      donationAmount: 0
 		};
 	}
 
@@ -18,7 +16,7 @@ class Subscription extends Component {
     this.setState({ [name]: Number(value) })
   }
 
-  displayUserCauses = (userCauses) => {
+/*  displayUserCauses = (userCauses) => {
     if (!userCauses) return null
     return userCauses.map( (cause, index) => (
       <div className="causeDisplay" key={index}>
@@ -30,9 +28,9 @@ class Subscription extends Component {
         <p>{cause.category}</p>
       </div>
     ))
-  }
+  }*/
 
-  setStreamAmount = (event) => {
+/*  setStreamAmount = (event) => {
     event.preventDefault()
     const payload = new FormData()
     const userEmail = sessionStorage.getItem('userEmail')
@@ -54,9 +52,9 @@ class Subscription extends Component {
       .catch(() => {
         console.log('Internal server error')
       })
-  }
+  }*/
 
-  donateOnce = async (event) => {
+/*  donateOnce = async (event) => {
     event.preventDefault()
     if (this.props.userCausesId.length < 1) {
       alert("Add a cause to your list first")
@@ -87,53 +85,37 @@ class Subscription extends Component {
         })
       } else alert("Unsufficient DAI balance")
     }
-  }
+  }*/
 
 	render() {
     // console.log(this.state)
-    let SetSubscription = (
+    let SetDonationAmount = (
       <div> 
         <div className="StreamTitle_Close">
           <p className="StreamTitle">Support causes around the world:</p>
-          <button className="closeFormAddCauseButton" onClick={this.props.closeSubscription}>x</button>
+          <button className="closeFormAddCauseButton" onClick={this.props.closeOneTimeDonation}>x</button>
         </div>
-        <div className="SubscriptionDetailsTop">Each month, your donations will be redistributed to associations registered on the platform</div>
+        <div className="SubscriptionDetailsTop">We accepts donations in DAI</div>
+        <div className="SubscriptionDetailsTop">Our address is: {this.props.irrigateAddress}</div>
+        <div className="SubscriptionDetailsTop">All donations will be distributed to associations registered on the platform</div>
+        <div className="SubscriptionDetailsTop"></div>
         <div className="subscriptionAmountContainer">
-          <button className="subscriptionAmountButton" name="subscriptionAmount" onClick={ this.handleChange } value="10" >10 DAI</button>
-          <button className="subscriptionAmountButton" name="subscriptionAmount" onClick={ this.handleChange } value="20" >20 DAI</button>
-          <button className="subscriptionAmountButton" name="subscriptionAmount" onClick={ this.handleChange } value="50" >50 DAI</button>
-          <button className="subscriptionAmountButton" name="subscriptionAmount" onClick={ this.handleChange } value="100" >100 DAI</button>
-          <button className="subscriptionAmountButton" name="subscriptionAmount" onClick={ this.handleChange } value="200" >200 DAI</button>
-          <button className="subscriptionAmountButton" name="subscriptionAmount" onClick={ this.handleChange } value="500" >500 DAI</button>
+          <button className="subscriptionAmountButton" name="donationAmount" onClick={ this.handleChange } value="10" >10 DAI</button>
+          <button className="subscriptionAmountButton" name="donationAmount" onClick={ this.handleChange } value="20" >20 DAI</button>
+          <button className="subscriptionAmountButton" name="donationAmount" onClick={ this.handleChange } value="50" >50 DAI</button>
+          <button className="subscriptionAmountButton" name="donationAmount" onClick={ this.handleChange } value="100" >100 DAI</button>
+          <button className="subscriptionAmountButton" name="donationAmount" onClick={ this.handleChange } value="200" >200 DAI</button>
+          <button className="subscriptionAmountButton" name="donationAmount" onClick={ this.handleChange } value="500" >500 DAI</button>
         </div>
-        <button className={this.state.subscriptionAmount === 0 ? ("FormAddCauseButtonDisabled") : ("FormAddCauseButton") } onClick={ () => this.props.batchCall(this.state.subscriptionAmount)}>Give {this.state.subscriptionAmount} DAI monthly</button>
+        <button className={this.state.donationAmount === 0 ? ("FormAddCauseButtonDisabled") : ("FormAddCauseButton") } onClick={ () => this.props.oneTransfer(this.state.donationAmount)}>Send {this.state.donationAmount} DAI</button>
+        <div className="SubscriptionDetailsTop">You can also send donations directly to associations using the button provided on their description</div>
       </div>
     )
 
-    let CancelSubscription = (
-      <div> 
-        <div className="StreamTitle_Close">
-          <p className="StreamTitle">Manage you donation:</p>
-          <p className="CurrentDonation">Your are currently donating { Math.round(-(this.props.flow)*3600*24*30/10**18) } DAI per month to the platform</p>
-        <div className="SubscriptionDetails">These funds are redistributed each month to assiociations registered on the platform</div>
-          <button className="closeFormAddCauseButton" onClick={this.props.closeSubscription}>x</button>
-        </div>
-        <button className="FormAddCauseButton" onClick={ this.props.stopCFA }>Cancel subscription</button>
-        <div className="SubscriptionDetails">To modify your subscription amount you need to cancel the current subscription and create a new one</div>
-      </div>
-    )
-
-    if (this.props.flow === '0') {
-      CancelSubscription = null
-    } else {
-      SetSubscription = null
-    }
-
-    let Subscription = (
+    let OneTimeDonation = (
       <Zoom duration={300}>
         <div className="Stream">
-          {SetSubscription}
-          {CancelSubscription}
+          {SetDonationAmount}
           {/*<button className="FormAddCauseButton" onClick={ this.props.mintDAI }>Mint some Goerli DAI</button>*/}
         </div>
         {/*<div className="Stream"> 
@@ -196,16 +178,16 @@ class Subscription extends Component {
       </Zoom>
 		)
 
-    if (! this.props.displaySubscription) {
-      Subscription = null;
+    if (! this.props.displayOneTimeDonation) {
+      OneTimeDonation = null;
     }
 
     return (
       <div>
-        {Subscription}
+        {OneTimeDonation}
       </div>
     )
 	}
 }
 
-export default Subscription;
+export default OneTimeDonation;

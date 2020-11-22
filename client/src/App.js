@@ -14,6 +14,7 @@ import FormAddUser from './components/FormAddUser'
 import FormLogIn from './components/FormLogIn'
 import Stream from './components/Stream'
 import Subscription from './components/Subscription'
+import OneTimeDonation from './components/OneTimeDonation'
 import Logout from './components/Logout'
 const logo = require('./components/planet.png')
 const { wad4human } = require('@decentral.ee/web3-helpers')
@@ -35,6 +36,7 @@ class App extends React.Component {
     displayFormLogIn: false,
     displayStream: false,
     displaySubscription: false,
+    displayOneTimeDonation: false,
     userCausesId: [],
     userCauses: [],
     currentStreamAmount: '0',
@@ -54,6 +56,8 @@ class App extends React.Component {
   componentDidMount = async () => {
     this.getIrrigateCauses()
     this.checkSessionStorage()
+    // this.checkConnection()
+    // this.getNetFlow()
   }
 
   async getIrrigateCauses() {
@@ -199,6 +203,25 @@ class App extends React.Component {
   displaySubscription = async () => {
     this.setState({ displaySubscription:true })
   }
+
+  displayOneTimeDonation = async () => {
+    console.log("trigger")
+    this.setState({ displayOneTimeDonation:true })
+  }
+
+  checkConnection = async () => {
+     // Check if browser is running Metamask
+     let web3: any;
+     if (window.ethereum) {
+         web3 = new Web3(window.ethereum);
+     } else if (window.web3) {
+         web3 = new Web3(window.web3.currentProvider);
+     };
+
+     // Check if User is already connected by retrieving the accounts
+     const accounts = await web3.eth.getAccounts()
+     this.setState({accounts})
+  };
 
   connectWallet = async () => {
     if (this.state.provider) {
@@ -353,6 +376,21 @@ class App extends React.Component {
     }
   }
 
+  oneTransfer = async(_amount) => {
+    if(_amount >= 10) {
+      const userAddress = this.state.accounts[0]
+      const appAddress = this.state.irrigateAddress
+      const amount = _amount.toString()
+      if (await dai.balanceOf(userAddress) >= 10) {
+        await dai.transfer(
+          appAddress,
+          sf.web3.utils.toWei(amount, "ether"),
+          { from: userAddress }
+        )
+      }
+    }
+  }
+
   render() {
     console.log(this.state)
     let FormAddUserButton = (
@@ -366,7 +404,8 @@ class App extends React.Component {
       <div>
       {/*<div className="NavbarRightCorner">*/}
         {/*<button className="displayFormAddUserButton description" onClick={ this.displayStreamAndConnectWallet }>Manage your stream</button>*/}
-        <button className="displayFormAddUserButton description" onClick={ this.displaySubscription }>{ this.state.flow === '0' ? ("Set a monthly subscription") : ("Manage your subscription") }</button>
+        {/*<button className="displayFormAddUserButton description" onClick={ this.displaySubscription }>{ this.state.flow === '0' ? ("Superfluid monthly subscription") : ("Manage your subscription") }</button>*/}
+        <button className="displayFormAddUserButton description" onClick={ this.displaySubscription }>Manage your Subscription</button>
         {/*<Logout checkSessionStorage={ this.checkSessionStorage } />*/}
       </div>
     )
@@ -377,7 +416,7 @@ class App extends React.Component {
       FormUserConnected = null
     }*/
 
-    if (this.state.accounts === null) {
+    if (this.state.accounts === null || this.state.flow === '0') {
       FormUserConnected = null
     }
 
@@ -391,6 +430,7 @@ class App extends React.Component {
           <div className="NavbarRightCorner">
             {FormUserConnected}
             <button className="connectWalletButton" onClick={ this.connectWallet }>{this.state.accounts === null ? ("Connect wallet") : ("Disconnect wallet \n" + (this.state.accounts[0].slice(0, 10) + "...")) }</button>
+            {/*<button className="connectWalletButton" onClick={ () => this.oneTransfer(10) }>Transfer DAI</button>*/}
             {/*<button className="connectWalletButton" onClick={ this.getFlow }>Get Flow</button>*/}
             {/*<button className="connectWalletButton" onClick={ this.mintDAI }>Mint DAI</button>*/}
             {/*<button className="connectWalletButton" onClick={ this.approveDAI }>Approve DAI</button>*/}
@@ -444,6 +484,8 @@ class App extends React.Component {
         <div className="HomeDescription_FormAddCause">
           <HomeDescription
             displayFormAddCause={(e) => this.setState({ displayFormAddCause:true})}
+            displaySubscription={ this.displaySubscription }
+            displayOneTimeDonation={ this.displayOneTimeDonation } 
           />
           {/*<button className="displayFormAddCauseButton" onClick={(e) => this.setState({ displayFormAddCause:true })}>Register your association</button>*/}
           <FormAddCause 
@@ -451,10 +493,18 @@ class App extends React.Component {
             displayFormAddCause={ this.state.displayFormAddCause } 
             closeFormAddCause={(e) => this.setState({ displayFormAddCause:false })}
           />
+          <OneTimeDonation
+            displayOneTimeDonation={ this.state.displayOneTimeDonation } 
+            closeOneTimeDonation={ (e) => this.setState({ displayOneTimeDonation:false }) }
+            oneTransfer={ this.oneTransfer }
+            irrigateAddress={ this.state.irrigateAddress }
+          />
         </div>
         <CausesList
           causes={ this.state.causes }
           addCauseToUserList={this.addCauseToUserList}
+          displayOneTimeDonation={ this.displayOneTimeDonation } 
+          oneTransfer={ this.oneTransfer }
         />
         <Footer />
       </div>

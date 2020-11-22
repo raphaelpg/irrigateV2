@@ -53,7 +53,7 @@ $standardShadow: 3px 3px 10px 0px grey;
 .displayFormAddUserButton{
   margin: 0 20px 0 0;
   padding: 0 0 0 0;
-  width: 140px;
+  width: 160px;
   height: 40px;
   font-weight: bold;
   background-color: transparent;
@@ -178,6 +178,68 @@ $standardShadow: 3px 3px 10px 0px grey;
 }
 .HomeDescriptionRight{
   text-align: center;
+  width: 470px;
+}
+.HomeDescriptionRightTitle{
+  width: 470px;
+}
+.HomeDescriptionRightButtonContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.HomeDescriptionButton{
+  position: relative;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  width: 200px;
+  height: 50px;
+  font-weight: bold;
+  background-color: $irrigateBackground;
+  color: $irrigateFontColor;
+  border: 1px solid $irrigateBackground;
+  border-radius: 5px;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.5s;
+  box-shadow: $standardShadow;
+}
+.HomeDescriptionButton:hover{
+  background-color: $irrigateFontColor;
+  color: $irrigateBackground;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.HomeDescriptionButtonSuperfluid{
+  position: relative;
+  margin: 0 0 0 0;
+  padding: 1px 0 0 0;
+  width: 200px;
+  height: 50px;
+  font-weight: bold;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.5s;
+  box-shadow: $standardShadow;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.HomeDescriptionButtonSuperfluid:hover{
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.SuperfluidLogo{
+  border-radius: 5px;
+}
+.SuperfluidLogoPhrase{
+  padding-top: 8px;
 }
 .displayFormAddCauseButton{
   position: relative;
@@ -287,8 +349,11 @@ $standardShadow: 3px 3px 10px 0px grey;
   cursor: pointer;
   box-shadow: 0 1px 3px 0 grey;
 }
+.SubscriptionDetailsTop{
+  margin: 30px 0;
+}
 .FormAddCauseButton{
-  margin: 20px auto 0 auto;
+  margin: 50px auto 20px auto;
   padding: 0 0 0 0;
   width: 200px;
   height: 40px;
@@ -304,6 +369,25 @@ $standardShadow: 3px 3px 10px 0px grey;
 }
 .FormAddCauseButton:hover{
   cursor: pointer;
+  background-color: $irrigateFontColor;
+  color: $irrigateBackground;
+  border: none;
+  border-radius: 5px;
+}
+.FormAddCauseButtonDisabled{
+  margin: 50px auto 20px auto;
+  padding: 0 0 0 0;
+  width: 200px;
+  height: 40px;
+  font-weight: bold;
+  background-color: grey;
+  color: white;
+  border: 1px solid grey;
+  border-radius: 5px;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.5s;
+  box-shadow: $standardShadow;
 }
 .FormAddCauseButtonFileLabel{
   cursor: pointer;
@@ -336,12 +420,17 @@ $standardShadow: 3px 3px 10px 0px grey;
   flex-direction: column;
   color: grey;
   box-shadow: $standardShadow;
+  text-align: center;
 }
 .StreamTitle{
   font-size: xx-large;
   font-weight: bold;
   color: $irrigateBackground;
   margin: 0px 0px 20px 0px;
+  text-align: left;
+}
+.CurrentDonation{
+  margin-top: 50px;
 }
 .connectWalletButton{
   margin-right: 50px;

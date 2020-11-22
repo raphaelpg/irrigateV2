@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import Fade from 'react-reveal/Fade'
+import sfLogo from '../images/Superfluid_logo.png'
 
 class HomeDescription extends Component {
 
@@ -15,7 +16,15 @@ class HomeDescription extends Component {
 	        </div>
 	        <div className="HomeDescriptionRight">
 						<Fade bottom duration={2000}>
-		        	<h2 className="HomeDescriptionRightTitle">Donors: browse associations by causes and locations.<br />Send funds directly or subscribe to a monthly donations</h2>
+		        	{/*<h2 className="HomeDescriptionRightTitle">Donors: browse associations by causes and locations.<br />Give directly or subscribe to a monthly donations</h2>*/}
+		        	<h2 className="HomeDescriptionRightTitle">Donors: give directly or subscribe to a monthly donations</h2>
+		        	<div className="HomeDescriptionRightButtonContainer">
+			        	<button className="HomeDescriptionButton" onClick={this.props.displayOneTimeDonation}>One time donation</button>
+				        <button className="HomeDescriptionButtonSuperfluid" onClick={this.props.displaySubscription}>
+				        	<img className="SuperfluidLogo" src={sfLogo} alt="Superfluid logo" />
+				        	<div className="SuperfluidLogoPhrase">Superfluid monthly subscription</div>
+				        </button>
+		        	</div>
 						</Fade>
 	      	</div>
 	      </div>

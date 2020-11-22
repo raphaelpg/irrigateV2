@@ -76,7 +76,7 @@ class FormAddCause extends Component {
       <Zoom duration={300}>
   			<div className="FormAddCause">
           <div className="FormAddCauseTitle_Close">
-            <p className="FormAddCauseTitle">Tell us more about your cause: </p>
+            <p className="FormAddCauseTitle">Tell us more about your association: </p>
             <button className="closeFormAddCauseButton" onClick={this.props.closeFormAddCause}>x</button>
   				</div>
           <form className="FormAddCauseFields" onSubmit={this.submit} >
@@ -159,7 +159,7 @@ class FormAddCause extends Component {
             </label>
               
             </div>
-            <button className ="FormAddCauseButton">Submit your cause</button>
+            <button className ="FormAddCauseButton">Submit your application</button>
           </form>
         </div>
       </Zoom> 
