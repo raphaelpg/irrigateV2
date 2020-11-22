@@ -1,6 +1,8 @@
 import React from 'react'
 // import getWeb3 from './utils/getWeb3'
-import Web3 from 'web3';
+import Web3 from 'web3'
+import Web3Modal from "web3modal"
+import { logoutOfWeb3Modal } from './utils/web3Modal'
 import axios from 'axios'
 import './css/App.scss'
 import MockDAI from './contracts/MockDAI.json'
@@ -39,6 +41,7 @@ class App extends React.Component {
     newStreamAmount: '0',
     web3: null,
     network: '',
+    provider: '',
     accounts: null,
     accountsDaiBalance: '0',
     irrigateAddress: '0xFC94FFAf800FcF5B146ceb4fc1C37dB604305ae5',
@@ -196,49 +199,58 @@ class App extends React.Component {
   }
 
   connectWallet = async () => {
-    try {
-      // const web3 = await getWeb3();
-      let web3;
-      if(window.ethereum){
-        web3 = new Web3(window.ethereum)
-        await window.ethereum.enable()
-      } else if(window.web3) {
-        web3 = new Web3(window.web3.currentProvider)
-      }
+    if (this.state.provider) {
+      logoutOfWeb3Modal()
+    } else {
+      try {
+        /*const providerOptions = {
+           //See Provider Options Section 
+        };*/
 
-      sf = new SuperfluidSDK.Framework({
-          version: "0.1.2-preview-20201014", // This is for using different protocol release
-          web3Provider: web3.currentProvider // your web3 provider
-      });
+        const web3Modal = new Web3Modal({
+          network: "goerli", // optional
+          cacheProvider: true // optional
+          // providerOptions // required
+        });
 
-      await sf.initialize()
+        const provider = await web3Modal.connect();
+        const web3 = new Web3(provider);
 
-      const daiAddress = await sf.resolver.get("tokens.fDAI");
-      dai = await sf.contracts.TestToken.at(daiAddress);
-      const daixWrapper = await sf.getERC20Wrapper(dai);
-      daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress);
+        sf = new SuperfluidSDK.Framework({
+            version: "0.1.2-preview-20201014", // This is for using different protocol release
+            web3Provider: web3.currentProvider // your web3 provider
+        });
 
-      global.web3 = sf.web3;
+        await sf.initialize()
 
-      const accounts = await sf.web3.eth.getAccounts();
+        const daiAddress = await sf.resolver.get("tokens.fDAI");
+        dai = await sf.contracts.TestToken.at(daiAddress);
+        const daixWrapper = await sf.getERC20Wrapper(dai);
+        daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress);
 
-      await web3.eth.net.getNetworkType((err, network) => {
-        this.setState({network: network})
-      })
-      // const accounts = await web3.eth.getAccounts()
-      /*const instanceDAI = new web3.eth.Contract(
-        MockDAI,
-        this.state.mockDaiAddress,
-      )*/
+        global.web3 = sf.web3;
 
-      this.setState({
-        web3,
-        accounts,
-        mockDaiContract: dai,
-      })
-    } catch (error) {
-      alert(`No wallet detected or wrong network.\nAdd a crypto wallet such as Metamask to your browser and switch it to Ropsten network.`);
-    } 
+        const accounts = await sf.web3.eth.getAccounts();
+
+        await web3.eth.net.getNetworkType((err, network) => {
+          this.setState({network: network})
+        })
+        // const accounts = await web3.eth.getAccounts()
+        /*const instanceDAI = new web3.eth.Contract(
+          MockDAI,
+          this.state.mockDaiAddress,
+        )*/
+
+        this.setState({
+          web3,
+          accounts,
+          mockDaiContract: dai,
+          provider,
+        })
+      } catch (error) {
+        alert(`No wallet detected or wrong network.\nAdd a crypto wallet such as Metamask to your browser and switch it to Goerli network.`);
+      } 
+    }
   }
 
   mintDAI = async() => {
@@ -302,26 +314,28 @@ class App extends React.Component {
   }
 
   batchCall = async(_amount) => {
-    const userAddress = this.state.accounts[0]
-    const recipient = this.state.irrigateAddress
-    const amount = _amount.toString()
-    const amountPerSecond = (Math.floor((_amount)*(10**18)/(3600*24*30))).toString()
-    let batch = new sf.web3.BatchRequest()
-    const userAllowance = wad4human(await dai.allowance.call(userAddress, daix.address))
-    // if (userAllowance === 0) {
-    //   batch.add(dai.approve(daix.address,"115792089237316195423570985008687907853269984665640564039457584007913129639935",{ from: userAddress }))
-    // }
-    // batch.add(daix.upgrade(sf.web3.utils.toWei(amount, "ether"),{ from: userAddress }))
-    batch.add(sf.host.callAgreement(sf.agreements.cfa.address,sf.agreements.cfa.contract.methods.createFlow(daix.address, recipient, amountPerSecond, "0x").encodeABI(),{ from: userAddress }))
-    try {
-      batch.execute()
-    } catch(err) {
-      console.log(err)
+    if(_amount !== 0) {
+      const userAddress = this.state.accounts[0]
+      const recipient = this.state.irrigateAddress
+      const amount = _amount.toString()
+      const amountPerSecond = (Math.floor((_amount)*(10**18)/(3600*24*30))).toString()
+      let batch = new sf.web3.BatchRequest()
+      const userAllowance = wad4human(await dai.allowance.call(userAddress, daix.address))
+      // if (userAllowance === 0) {
+      //   batch.add(dai.approve(daix.address,"115792089237316195423570985008687907853269984665640564039457584007913129639935",{ from: userAddress }))
+      // }
+      // batch.add(daix.upgrade(sf.web3.utils.toWei(amount, "ether"),{ from: userAddress }))
+      batch.add(sf.host.callAgreement(sf.agreements.cfa.address,sf.agreements.cfa.contract.methods.createFlow(daix.address, recipient, amountPerSecond, "0x").encodeABI(),{ from: userAddress }))
+      try {
+        batch.execute()
+      } catch(err) {
+        console.log(err)
+      }
     }
   }
 
   render() {
-    console.log(this.state)
+    // console.log(this.state.accounts)
     let FormAddUserButton = (
       <div className="NavbarRightCorner">
         <button className="displayFormAddUserButton description" onClick={(e) => this.setState({ displayFormAddUser:true })}>Sign up</button>
@@ -351,8 +365,8 @@ class App extends React.Component {
             <h1 className="Title">IRRIGATE</h1>
           </div>
           <div className="NavbarRightCorner">
-            <button className="connectWalletButton" onClick={ this.connectWallet }>{this.state.accounts === null ? ("Connect wallet") : ("Disconnect wallet") }</button>
-            <button className="connectWalletButton" onClick={ this.mintDAI }>Mint DAI</button>
+            <button className="connectWalletButton" onClick={ this.connectWallet }>{this.state.accounts === null ? ("Connect wallet") : ("Disconnect wallet \n" + (this.state.accounts[0].slice(0, 10) + "...")) }</button>
+            {/*<button className="connectWalletButton" onClick={ this.mintDAI }>Mint DAI</button>*/}
             {/*<button className="connectWalletButton" onClick={ this.approveDAI }>Approve DAI</button>*/}
             {/*<button className="connectWalletButton" onClick={ this.upgradeDAIx }>Upgrade DAIx</button>*/}
             {/*<button className="connectWalletButton" onClick={ this.createCFA }>Create CFA</button>*/}

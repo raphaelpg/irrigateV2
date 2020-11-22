@@ -90,7 +90,7 @@ class Subscription extends Component {
   }
 
 	render() {
-    console.log(this.state)
+    // console.log(this.state)
     let Subscription = (
       <Zoom duration={300}>
         <div className="Stream"> 
@@ -113,7 +113,8 @@ class Subscription extends Component {
             <button className="subscriptionAmountButton" name="subscriptionAmount" onClick={ this.handleChange } value="500" >500 DAI</button>
           </div>
           <button className="FormAddCauseButton" onClick={ () => this.props.batchCall(this.state.subscriptionAmount)}>Give {this.state.subscriptionAmount} DAI monthly</button>
-          <button className="FormAddCauseButton" name="subscriptionAmount" onClick={ this.props.stopCFA }>Cancel subscription</button>
+          <button className="FormAddCauseButton" onClick={ this.props.stopCFA }>Cancel subscription</button>
+          <button className="FormAddCauseButton" onClick={ this.props.mintDAI }>Mint some Goerli DAI</button>
 
  {/*         <div className="donateOnceContainer">
             <form className="donateOnceForm" onSubmit={this.donateOnce} >
