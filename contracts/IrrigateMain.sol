@@ -97,15 +97,15 @@ contract Ownable is Context {
 pragma solidity ^0.6.0;
 
 contract IrrigateMain is Ownable {
-	mapping(address => bool) public causeAddressList;
-	mapping(address => uint) public genericDonations;
-	mapping(address => uint) public specificDonations;
+    mapping(address => bool) public causeAddressList;
+    mapping(address => uint) public genericDonations;
+    mapping(address => uint) public specificDonations;
 
-  event SetCauseAddress(address indexed causeAddress, string message);
-  event GenericDonationSaved(address indexed donorAddress, uint amount, string message);
-  event SpecificDonationSaved(address indexed receiver, uint amount, string message);
-  event DonationsDistributed(string message);
-  event PODSentToDonor(address indexed donorAddress, string message);
+    event SetCauseAddress(address indexed causeAddress, string message);
+    event GenericDonationSaved(address indexed donorAddress, uint amount, string message);
+    event SpecificDonationSaved(address indexed receiver, uint amount, string message);
+    event DonationsDistributed(string message);
+    event PODSentToDonor(address indexed donorAddress, string message);
 
 	constructor() public {
 	}

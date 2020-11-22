@@ -42,6 +42,8 @@ class App extends React.Component {
     web3: null,
     network: '',
     provider: '',
+    isFlow: '',
+    flow: '0',
     accounts: null,
     accountsDaiBalance: '0',
     irrigateAddress: '0xFC94FFAf800FcF5B146ceb4fc1C37dB604305ae5',
@@ -240,12 +242,14 @@ class App extends React.Component {
           MockDAI,
           this.state.mockDaiAddress,
         )*/
+        const flow = (await sf.agreements.cfa.getNetFlow.call(daix.address, accounts[0])).toString()
 
         this.setState({
           web3,
           accounts,
           mockDaiContract: dai,
           provider,
+          flow,
         })
       } catch (error) {
         alert(`No wallet detected or wrong network.\nAdd a crypto wallet such as Metamask to your browser and switch it to Goerli network.`);
@@ -313,6 +317,21 @@ class App extends React.Component {
       { from: userAddress })
   }
 
+  getFlow = async() => {
+    const userAddress = this.state.accounts[0]
+    const recipient = this.state.irrigateAddress
+    this.setState({
+      isFlow: (await sf.agreements.cfa.getFlow(daix.address, userAddress, recipient)).toString()
+    })
+  }
+
+  getNetFlow = async() => {
+    const userAddress = this.state.accounts[0]
+    this.setState({
+      flow: (await sf.agreements.cfa.getNetFlow.call(daix.address, userAddress)).toString()
+    })
+  }
+
   batchCall = async(_amount) => {
     if(_amount !== 0) {
       const userAddress = this.state.accounts[0]
@@ -327,7 +346,7 @@ class App extends React.Component {
       // batch.add(daix.upgrade(sf.web3.utils.toWei(amount, "ether"),{ from: userAddress }))
       batch.add(sf.host.callAgreement(sf.agreements.cfa.address,sf.agreements.cfa.contract.methods.createFlow(daix.address, recipient, amountPerSecond, "0x").encodeABI(),{ from: userAddress }))
       try {
-        batch.execute()
+        await batch.execute()
       } catch(err) {
         console.log(err)
       }
@@ -335,7 +354,7 @@ class App extends React.Component {
   }
 
   render() {
-    // console.log(this.state.accounts)
+    console.log(this.state)
     let FormAddUserButton = (
       <div className="NavbarRightCorner">
         <button className="displayFormAddUserButton description" onClick={(e) => this.setState({ displayFormAddUser:true })}>Sign up</button>
@@ -344,16 +363,21 @@ class App extends React.Component {
     )
 
     let FormUserConnected = (
-      <div className="NavbarRightCorner">
+      <div>
+      {/*<div className="NavbarRightCorner">*/}
         {/*<button className="displayFormAddUserButton description" onClick={ this.displayStreamAndConnectWallet }>Manage your stream</button>*/}
-        <button className="displayFormAddUserButton description" onClick={ this.displaySubscription }>Manage your subscription</button>
-        <Logout checkSessionStorage={ this.checkSessionStorage } />
+        <button className="displayFormAddUserButton description" onClick={ this.displaySubscription }>{ this.state.flow === '0' ? ("Set a monthly subscription") : ("Manage your subscription") }</button>
+        {/*<Logout checkSessionStorage={ this.checkSessionStorage } />*/}
       </div>
     )
 
-    if (this.state.userStatus === 'Connected') {
+    /*if (this.state.userStatus === 'Connected') {
       FormAddUserButton = null
     } else {
+      FormUserConnected = null
+    }*/
+
+    if (this.state.accounts === null) {
       FormUserConnected = null
     }
 
@@ -365,16 +389,17 @@ class App extends React.Component {
             <h1 className="Title">IRRIGATE</h1>
           </div>
           <div className="NavbarRightCorner">
+            {FormUserConnected}
             <button className="connectWalletButton" onClick={ this.connectWallet }>{this.state.accounts === null ? ("Connect wallet") : ("Disconnect wallet \n" + (this.state.accounts[0].slice(0, 10) + "...")) }</button>
+            {/*<button className="connectWalletButton" onClick={ this.getFlow }>Get Flow</button>*/}
             {/*<button className="connectWalletButton" onClick={ this.mintDAI }>Mint DAI</button>*/}
             {/*<button className="connectWalletButton" onClick={ this.approveDAI }>Approve DAI</button>*/}
             {/*<button className="connectWalletButton" onClick={ this.upgradeDAIx }>Upgrade DAIx</button>*/}
             {/*<button className="connectWalletButton" onClick={ this.createCFA }>Create CFA</button>*/}
             {/*<button className="connectWalletButton" onClick={ () => this.batchCall(10) }>Batch</button>*/}
             {/*<button className="connectWalletButton" onClick={ this.stopCFA }>Stop CFA</button>*/}
-            {FormAddUserButton}
-            {FormUserConnected}
-            <FormAddUser 
+            {/*{FormAddUserButton}*/}
+{/*            <FormAddUser 
               displayFormAddUser={ this.state.displayFormAddUser } 
               closeFormAddUser={(e) => this.setState({ displayFormAddUser:false })}
             />
@@ -384,7 +409,7 @@ class App extends React.Component {
                 this.setState({ displayFormLogIn:false })
                 this.checkSessionStorage()
               }}
-            />
+            />*/}
             {/*<Stream
               displayStream={ this.state.displayStream } 
               closeStream={ (e) => this.setState({ displayStream:false }) }
@@ -412,12 +437,15 @@ class App extends React.Component {
               mintDAI={ this.mintDAI }
               batchCall={ this.batchCall }
               stopCFA={ this.stopCFA }
+              flow={ this.state.flow }
             />
           </div>
         </div> 
         <div className="HomeDescription_FormAddCause">
-          <HomeDescription />
-          <button className="displayFormAddCauseButton" onClick={(e) => this.setState({ displayFormAddCause:true })}>Register your cause</button>
+          <HomeDescription
+            displayFormAddCause={(e) => this.setState({ displayFormAddCause:true})}
+          />
+          {/*<button className="displayFormAddCauseButton" onClick={(e) => this.setState({ displayFormAddCause:true })}>Register your association</button>*/}
           <FormAddCause 
             getIrrigateCauses={ this.getIrrigateCauses }
             displayFormAddCause={ this.state.displayFormAddCause } 

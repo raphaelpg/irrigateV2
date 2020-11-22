@@ -91,6 +91,16 @@ class Subscription extends Component {
 
 	render() {
     // console.log(this.state)
+    let CancelSubscription = (
+      <div>
+        <button className="FormAddCauseButton" onClick={ this.props.stopCFA }>Cancel subscription</button>
+      </div>
+    )
+
+    if (this.props.flow === '0') {
+      CancelSubscription = null
+    }
+
     let Subscription = (
       <Zoom duration={300}>
         <div className="Stream"> 
@@ -113,7 +123,8 @@ class Subscription extends Component {
             <button className="subscriptionAmountButton" name="subscriptionAmount" onClick={ this.handleChange } value="500" >500 DAI</button>
           </div>
           <button className="FormAddCauseButton" onClick={ () => this.props.batchCall(this.state.subscriptionAmount)}>Give {this.state.subscriptionAmount} DAI monthly</button>
-          <button className="FormAddCauseButton" onClick={ this.props.stopCFA }>Cancel subscription</button>
+          {/*<button className="FormAddCauseButton" onClick={ this.props.stopCFA }>Cancel subscription</button>*/}
+          {CancelSubscription}
           <button className="FormAddCauseButton" onClick={ this.props.mintDAI }>Mint some Goerli DAI</button>
 
  {/*         <div className="donateOnceContainer">

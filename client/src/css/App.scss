@@ -26,7 +26,7 @@ $standardShadow: 3px 3px 10px 0px grey;
   height: 80px;
   display: flex;
   justify-content: space-between;
-  background: $irrigateBackground;
+  background: linear-gradient(45deg, green, $irrigateBackground);
   color: $irrigateFontColor;
   border: 0 transparent;
   border-bottom: 3px solid;
@@ -51,14 +51,14 @@ $standardShadow: 3px 3px 10px 0px grey;
   margin: auto 0px;
 }
 .displayFormAddUserButton{
-  margin: 0 0 0 0;
+  margin: 0 20px 0 0;
   padding: 0 0 0 0;
-  width: 100px;
-  /*height: 50px;*/
+  width: 140px;
+  height: 40px;
   font-weight: bold;
-  background-color: $irrigateBackground;
+  background-color: transparent;
   color: $irrigateFontColor;
-  border: 1px solid $irrigateBackground;
+  border: 1px solid transparent;
   border-radius: 15px;
   letter-spacing: 1px;
   outline: none;
@@ -174,14 +174,19 @@ $standardShadow: 3px 3px 10px 0px grey;
 }
 .HomeDescriptionLeft{
   margin: 0 5% 0 0;
+  text-align: center;
+}
+.HomeDescriptionRight{
+  text-align: center;
 }
 .displayFormAddCauseButton{
-  position: absolute;
-  left: 80%;
-  top: 300px;
+  position: relative;
+  /*left: 18%;*/
+  /*top: 300px;*/
+  transform: translateX(-50%);
   margin: 0 0 0 0;
   padding: 0 0 0 0;
-  width: 200px;
+  width: 250px;
   height: 50px;
   font-weight: bold;
   background-color: $irrigateBackground;
@@ -339,7 +344,7 @@ $standardShadow: 3px 3px 10px 0px grey;
   margin: 0px 0px 20px 0px;
 }
 .connectWalletButton{
-  margin-right: 1%;
+  margin-right: 50px;
   background-color: orange;
   border: none;
   border-radius: 5px;
@@ -347,6 +352,9 @@ $standardShadow: 3px 3px 10px 0px grey;
   height: 40px;
   cursor: pointer;
   outline: none;
+  color: darkgreen;
+  font-weight: bold;
+  font-size: small;
 }
 .setStreamForm{
   display: flex;
