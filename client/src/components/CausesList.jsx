@@ -1,19 +1,19 @@
 import React, { Component } from 'react'
 import Fade from 'react-reveal/Fade'
-const animal = require('./animal.png')
-const development = require('./development.png')
-const education = require('./education.png')
-const environment = require('./environment.png')
-const health = require('./health.png')
-const human_rights = require('./human_rights.png')
-const america = require('./america.png')
-const africa = require('./africa.png')
-const asia = require('./asia.png')
-const europe = require('./europe.png')
-const oceania = require('./oceania.png')
-const poles = require('./iceberg.png')
-const planet = require('./planet.png')
-const globe = require('./globe.png')
+const animal = require('../images/animal.png')
+const development = require('../images/development.png')
+const education = require('../images/education.png')
+const environment = require('../images/environment.png')
+const health = require('../images/health.png')
+const human_rights = require('../images/human_rights.png')
+const america = require('../images/america.png')
+const africa = require('../images/africa.png')
+const asia = require('../images/asia.png')
+const europe = require('../images/europe.png')
+const oceania = require('../images/oceania.png')
+const poles = require('../images/iceberg.png')
+const planet = require('../images/planet.png')
+const globe = require('../images/globe.png')
 
 class CausesList extends Component {
   constructor(props){

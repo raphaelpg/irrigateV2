@@ -1,10 +1,6 @@
 import React from 'react'
-// import getWeb3 from './utils/getWeb3'
 import Web3 from 'web3'
-import Web3Modal from "web3modal"
-// import WalletConnectProvider from "@walletconnect/web3-provider"
-// import { logoutOfWeb3Modal } from './utils/web3Modal'
-import { web3Modal, logoutOfWeb3Modal } from "./utils/web3Modal";
+import { web3Modal, logoutOfWeb3Modal } from './utils/web3Modal'
 import axios from 'axios'
 import './css/App.scss'
 import MockDAI from './contracts/MockDAI.json'
@@ -18,7 +14,7 @@ import Stream from './components/Stream'
 import Subscription from './components/Subscription'
 import OneTimeDonation from './components/OneTimeDonation'
 import Logout from './components/Logout'
-const logo = require('./components/planet.png')
+const logo = require('./images/planet.png')
 const { wad4human } = require('@decentral.ee/web3-helpers')
 const SuperfluidSDK = require('@superfluid-finance/ethereum-contracts')
 const TruffleContract = require('@truffle/contract')
@@ -60,12 +56,10 @@ class App extends React.Component {
 
   componentDidMount = async () => {
     this.getIrrigateCauses()
-    this.checkSessionStorage()
-    // this.checkConnection()
-    // this.getNetFlow()
+    this.checkConnection()
   }
 
-  async getIrrigateCauses() {
+  getIrrigateCauses = async () => {
     try {
       axios.get('/api')
         .then((response) => {
@@ -80,131 +74,6 @@ class App extends React.Component {
     }
   }
 
-  checkSessionStorage = async () => {
-    try {
-      const sessionUserAuth = await sessionStorage.getItem('userAuth')
-      const sessionUserToken = await sessionStorage.getItem('userToken')
-      this.setState({ userAuth: sessionUserAuth, userToken: sessionUserToken })
-      if (sessionUserAuth === 'true') {
-        this.setState({ userStatus: 'Connected' })
-        this.getUserData()
-      } else {
-        this.setState({ userStatus: '' })
-      }
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  async saveUserCauses() {
-    try {
-      if (sessionStorage.getItem('userAuth') === 'true') {
-        const userEmail = sessionStorage.getItem('userEmail')
-        const userToken = sessionStorage.getItem('userToken')
-
-        const payload = new FormData()
-        payload.append('email', userEmail)
-        payload.append('userCausesId', this.state.userCausesId)
-        let config = {
-          headers: {
-            Authorization: 'Bearer ' + userToken
-          }
-        }
-
-        axios.post('/user/saveCauses', payload, config)
-          .catch(() => {
-            console.log('Error sending user causes list')
-          })
-      }
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  async getUserData() {
-    try {
-      if (sessionStorage.getItem('userAuth') === 'true') {
-        const userEmail = sessionStorage.getItem('userEmail')
-        const userToken = sessionStorage.getItem('userToken')
-
-        const payload = new FormData()
-        payload.append('email', userEmail)
-
-        let config = {
-          headers: {
-            Authorization: 'Bearer ' + userToken
-          }
-        }
-
-        axios.post('/user/data', payload, config)
-          .then((response) => {
-            const data = response.data
-            this.setState({
-              currentStreamAmount: data[0].streamAmount,
-              userCausesId: data[0].subscribedCauses
-            })
-            if (data[0].subscribedCauses.length > 0) {
-              this.getUserCauses()
-            }
-          })
-          .catch(() => {
-            console.log('Error retrieving user causes list')
-          })
-      }
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  addCauseToUserList = ({ target }) => {
-    this.state.userCausesId.push(target.name)
-    this.saveUserCauses()
-    this.getUserCauses()
-  }
-
-  removeCauseFromUserList = ({ target }) => {
-    const causeIndex = this.state.userCausesId.indexOf(target.name);
-    if (causeIndex > -1) {
-      this.state.userCausesId.splice(causeIndex, 1);
-    }
-    this.saveUserCauses()
-    this.getUserCauses()
-  }
-
-  async getUserCauses() {
-    try {
-      const payload = new FormData()
-      const userToken = sessionStorage.getItem('userToken')
-      if (this.state.userCausesId.length < 1) {
-        payload.append('causesId', 'none')
-      } else {
-        payload.append('causesId', this.state.userCausesId)
-      }
-      payload.append('userEmail', sessionStorage.getItem('userEmail'))
-
-      let config = {
-        headers: {
-          Authorization: 'Bearer ' + userToken
-        }
-      }
-
-      axios.post('/user/causes', payload, config)
-        .then((response) => {
-          const data = response.data
-          this.setState({ userCauses: data })
-        })
-        .catch((e) => {
-          console.log(e)
-        })
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  displayStreamAndConnectWallet = async () => {
-    this.setState({ displayStream:true })
-  }
-
   displaySubscription = async () => {
     this.setState({ displaySubscription:true })
   }
@@ -214,17 +83,9 @@ class App extends React.Component {
   }
 
   checkConnection = async () => {
-     // Check if browser is running Metamask
-     let web3: any;
-     if (window.ethereum) {
-         web3 = new Web3(window.ethereum);
-     } else if (window.web3) {
-         web3 = new Web3(window.web3.currentProvider);
-     };
-
-     // Check if User is already connected by retrieving the accounts
-     const accounts = await web3.eth.getAccounts()
-     this.setState({accounts})
+    if (web3Modal.cachedProvider) {
+      this.connectWallet();
+    }
   };
 
   connectWallet = async () => {
@@ -312,13 +173,13 @@ class App extends React.Component {
       )
   }
 
-  createCFA = async() => {
+  createCFA = async(_amount) => {
     const userAddress = this.state.accounts[0]
     const recipient = this.state.irrigateAddress
     await sf.host.callAgreement(
       sf.agreements.cfa.address,
       sf.agreements.cfa.contract.methods
-        .createFlow(daix.address, recipient, "385802469135802", "0x")//10 per month
+        .createFlow(daix.address, recipient, _amount, "0x")
         .encodeABI(),
       { from: userAddress })
   }
@@ -343,6 +204,7 @@ class App extends React.Component {
   }
 
   getNetFlow = async() => {
+    console.log("getting NetFlow")
     const userAddress = this.state.accounts[0]
     this.setState({
       flow: (await sf.agreements.cfa.getNetFlow.call(daix.address, userAddress)).toString()
@@ -355,12 +217,19 @@ class App extends React.Component {
       const recipient = this.state.irrigateAddress
       const amount = _amount.toString()
       const amountPerSecond = (Math.floor((_amount)*(10**18)/(3600*24*30))).toString()
-      let batch = new sf.web3.BatchRequest()
+      // let batch = new sf.web3.BatchRequest()
       // batch.add(dai.approve(daix.address,"115792089237316195423570985008687907853269984665640564039457584007913129639935",{ from: userAddress }))
       // batch.add(daix.upgrade(sf.web3.utils.toWei(amount, "ether"),{ from: userAddress }))
-      batch.add(sf.host.callAgreement(sf.agreements.cfa.address,sf.agreements.cfa.contract.methods.createFlow(daix.address, recipient, amountPerSecond, "0x").encodeABI(),{ from: userAddress }))
+      // batch.add(sf.host.callAgreement(sf.agreements.cfa.address,sf.agreements.cfa.contract.methods.createFlow(daix.address, recipient, amountPerSecond, "0x").encodeABI(),{ from: userAddress }))
       try {
-        await batch.execute()
+        // await batch.execute()
+        await this.createCFA(amountPerSecond)
+        .then(
+          setInterval( () => {
+            //if flow !0, close pop up and return else {
+            this.getNetFlow()
+          }, 10000)
+        )
       } catch(err) {
         console.log(err)
       }
@@ -373,7 +242,6 @@ class App extends React.Component {
       const appAddress = this.state.irrigateAddress
       const daiBalance = this.state.accountsDaiBalance
       const amount = _amount.toString()
-      // if (await dai.balanceOf(userAddress) >= _amount) {
       if (daiBalance >= _amount) {
         this.setState({
           daiWarning: false
@@ -402,19 +270,9 @@ class App extends React.Component {
 
     let FormUserConnected = (
       <div>
-      {/*<div className="NavbarRightCorner">*/}
-        {/*<button className="displayFormAddUserButton description" onClick={ this.displayStreamAndConnectWallet }>Manage your stream</button>*/}
-        {/*<button className="displayFormAddUserButton description" onClick={ this.displaySubscription }>{ this.state.flow === '0' ? ("Superfluid monthly subscription") : ("Manage your subscription") }</button>*/}
         <button className="displayFormAddUserButton description" onClick={ this.displaySubscription }>Manage your Subscription</button>
-        {/*<Logout checkSessionStorage={ this.checkSessionStorage } />*/}
       </div>
     )
-
-    /*if (this.state.userStatus === 'Connected') {
-      FormAddUserButton = null
-    } else {
-      FormUserConnected = null
-    }*/
 
     if (this.state.accounts === null || this.state.flow === '0') {
       FormUserConnected = null
@@ -430,41 +288,6 @@ class App extends React.Component {
           <div className="NavbarRightCorner">
             {FormUserConnected}
             <button className="connectWalletButton" onClick={ this.connectWallet }>{this.state.accounts === null ? ("Connect wallet") : ("Disconnect wallet \n" + (this.state.accounts[0].slice(0, 10) + "...")) }</button>
-            {/*<button className="connectWalletButton" onClick={ () => this.oneTransfer(10) }>Transfer DAI</button>*/}
-            {/*<button className="connectWalletButton" onClick={ this.getFlow }>Get Flow</button>*/}
-            {/*<button className="connectWalletButton" onClick={ this.mintDAI }>Mint DAI</button>*/}
-            {/*<button className="connectWalletButton" onClick={ this.approveDAI }>Approve DAI</button>*/}
-            {/*<button className="connectWalletButton" onClick={ this.upgradeDAIx }>Upgrade DAIx</button>*/}
-            {/*<button className="connectWalletButton" onClick={ this.createCFA }>Create CFA</button>*/}
-            {/*<button className="connectWalletButton" onClick={ () => this.batchCall(10) }>Batch</button>*/}
-            {/*<button className="connectWalletButton" onClick={ this.stopCFA }>Stop CFA</button>*/}
-            {/*{FormAddUserButton}*/}
-{/*            <FormAddUser 
-              displayFormAddUser={ this.state.displayFormAddUser } 
-              closeFormAddUser={(e) => this.setState({ displayFormAddUser:false })}
-            />
-            <FormLogIn 
-              displayFormLogIn={ this.state.displayFormLogIn } 
-              closeFormLogIn={(e) => {
-                this.setState({ displayFormLogIn:false })
-                this.checkSessionStorage()
-              }}
-            />*/}
-            {/*<Stream
-              displayStream={ this.state.displayStream } 
-              closeStream={ (e) => this.setState({ displayStream:false }) }
-              userCauses={ this.state.userCauses }
-              currentStreamAmount={ this.state.currentStreamAmount }
-              getUserData={ this.getUserData }
-              irrigateAddress={ this.state.irrigateAddress }
-              accounts={ this.state.accounts }
-              mockDaiContract={ this.state.mockDaiContract }
-              userCausesId={ this.state.userCausesId }
-              removeCauseFromUserList={ this.removeCauseFromUserList }
-              mintDAI={ this.mintDAI }
-              batchCall={ this.batchCall }
-              stopCFA={ this.stopCFA }
-            />*/}
             <Subscription
               displaySubscription={ this.state.displaySubscription } 
               closeSubscription={ (e) => this.setState({ displaySubscription:false }) }
@@ -489,7 +312,6 @@ class App extends React.Component {
             displaySubscription={ this.displaySubscription }
             displayOneTimeDonation={ this.displayOneTimeDonation } 
           />
-          {/*<button className="displayFormAddCauseButton" onClick={(e) => this.setState({ displayFormAddCause:true })}>Register your association</button>*/}
           <FormAddCause 
             getIrrigateCauses={ this.getIrrigateCauses }
             displayFormAddCause={ this.state.displayFormAddCause } 
@@ -508,14 +330,11 @@ class App extends React.Component {
         <CausesList
           causes={ this.state.causes }
           addCauseToUserList={this.addCauseToUserList}
-          displayOneTimeDonation={ this.displayOneTimeDonation } 
-          oneTransfer={ this.oneTransfer }
         />
         <Footer />
       </div>
     )
   }
 }
-
 
 export default App

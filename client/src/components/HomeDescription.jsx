@@ -16,7 +16,6 @@ class HomeDescription extends Component {
 	        </div>
 	        <div className="HomeDescriptionRight">
 						<Fade bottom duration={2000}>
-		        	{/*<h2 className="HomeDescriptionRightTitle">Donors: browse associations by causes and locations.<br />Give directly or subscribe to a monthly donations</h2>*/}
 		        	<h2 className="HomeDescriptionRightTitle">Donors: give directly or subscribe to a monthly donations</h2>
 		        	<div className="HomeDescriptionRightButtonContainer">
 			        	<button className="HomeDescriptionButton" onClick={this.props.displayOneTimeDonation}>One time donation</button>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-const logo = require('./planet.png')
+const logo = require('../images/planet.png')
 
 class Footer extends Component {
 
