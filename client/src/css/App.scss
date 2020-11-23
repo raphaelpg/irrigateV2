@@ -214,9 +214,9 @@ $standardShadow: 3px 3px 10px 0px grey;
 .HomeDescriptionButtonSuperfluid{
   position: relative;
   margin: 0 0 0 0;
-  padding: 1px 0 0 0;
+  padding: 1px 0 0 1px;
   width: 200px;
-  height: 50px;
+  height: 49px;
   font-weight: bold;
   background-color: white;
   color: black;
@@ -278,7 +278,7 @@ $standardShadow: 3px 3px 10px 0px grey;
   top: 100px;
   /*border: 1px solid $irrigateBackground;*/
   border-radius: 5px;
-  z-index: 9999;
+  z-index: 99999;
   display: flex;
   flex-direction: column;
   box-shadow: $standardShadow;
@@ -353,7 +353,7 @@ $standardShadow: 3px 3px 10px 0px grey;
   margin: 30px 0;
 }
 .FormAddCauseButton{
-  margin: 50px auto 20px auto;
+  margin: 20px auto 20px auto;
   padding: 0 0 0 0;
   width: 200px;
   height: 40px;
@@ -375,7 +375,7 @@ $standardShadow: 3px 3px 10px 0px grey;
   border-radius: 5px;
 }
 .FormAddCauseButtonDisabled{
-  margin: 50px auto 20px auto;
+  margin: 20px auto 20px auto;
   padding: 0 0 0 0;
   width: 200px;
   height: 40px;
@@ -388,6 +388,36 @@ $standardShadow: 3px 3px 10px 0px grey;
   outline: none;
   transition: all 0.5s;
   box-shadow: $standardShadow;
+}
+.SubscriptionButtonContainer{
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+.FormMintDaiButton{
+  margin: 0px 10px;
+  padding: 0 0 0 0;
+  width: 200px;
+  height: 40px;
+  font-weight: bold;
+  background-color: $irrigateBackground;
+  color: $irrigateFontColor;
+  border: 1px solid $irrigateBackground;
+  border-radius: 5px;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.5s;
+  box-shadow: $standardShadow;
+}
+.FormMintDaiButton:hover{
+  cursor: pointer;
+  background-color: $irrigateFontColor;
+  color: $irrigateBackground;
+  border: none;
+  border-radius: 5px;
+}
+.SFbutton{
+  margin: 0px 10px;
 }
 .FormAddCauseButtonFileLabel{
   cursor: pointer;
@@ -415,7 +445,7 @@ $standardShadow: 3px 3px 10px 0px grey;
   top: 100px;
   /*border: 1px solid $irrigateBackground;*/
   border-radius: 5px;
-  z-index: 9999;
+  z-index: 99999;
   display: flex;
   flex-direction: column;
   color: grey;

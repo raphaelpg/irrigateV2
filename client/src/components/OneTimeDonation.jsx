@@ -88,7 +88,20 @@ class OneTimeDonation extends Component {
   }*/
 
 	render() {
-    // console.log(this.state)
+    let WarningPhrase = (
+      <div className="WarningPhrase">Please connect your wallet first</div>
+    )
+    if (this.props.accounts !== null) {
+      WarningPhrase = null
+    }
+
+    let BalanceWarning = (
+      <div className="WarningPhrase">Insuficient DAI in your balance</div>
+    )
+    if (this.props.daiWarning === false) {
+      BalanceWarning = null
+    }
+
     let SetDonationAmount = (
       <div> 
         <div className="StreamTitle_Close">
@@ -97,7 +110,7 @@ class OneTimeDonation extends Component {
         </div>
         <div className="SubscriptionDetailsTop">We accepts donations in DAI</div>
         <div className="SubscriptionDetailsTop">Our address is: {this.props.irrigateAddress}</div>
-        <div className="SubscriptionDetailsTop">All donations will be distributed to associations registered on the platform</div>
+        <div className="SubscriptionDetailsTop">Donations will be distributed to associations registered on the platform</div>
         <div className="SubscriptionDetailsTop"></div>
         <div className="subscriptionAmountContainer">
           <button className="subscriptionAmountButton" name="donationAmount" onClick={ this.handleChange } value="10" >10 DAI</button>
@@ -107,8 +120,10 @@ class OneTimeDonation extends Component {
           <button className="subscriptionAmountButton" name="donationAmount" onClick={ this.handleChange } value="200" >200 DAI</button>
           <button className="subscriptionAmountButton" name="donationAmount" onClick={ this.handleChange } value="500" >500 DAI</button>
         </div>
-        <button className={this.state.donationAmount === 0 ? ("FormAddCauseButtonDisabled") : ("FormAddCauseButton") } onClick={ () => this.props.oneTransfer(this.state.donationAmount)}>Send {this.state.donationAmount} DAI</button>
-        <div className="SubscriptionDetailsTop">You can also send donations directly to associations using the button provided on their description</div>
+        <button className={this.state.donationAmount === 0 || this.props.accounts === null ? ("FormAddCauseButtonDisabled") : ("FormAddCauseButton") } onClick={ () => this.props.oneTransfer(this.state.donationAmount)}>Send {this.state.donationAmount} DAI</button>
+        {WarningPhrase}
+        {BalanceWarning}
+        <div className="SubscriptionDetailsTop">You can also send donations directly to associations using the address provided on their description</div>
       </div>
     )
 

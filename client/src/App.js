@@ -48,6 +48,9 @@ class App extends React.Component {
     flow: '0',
     accounts: null,
     accountsDaiBalance: '0',
+    accountsDaixBalance: '0.00000',
+    daiWarning: false,
+    userDaixAllowance: null,
     irrigateAddress: '0xFC94FFAf800FcF5B146ceb4fc1C37dB604305ae5',
     mockDaiAddress: '0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108',
     mockDaiContract: null,
@@ -205,7 +208,6 @@ class App extends React.Component {
   }
 
   displayOneTimeDonation = async () => {
-    console.log("trigger")
     this.setState({ displayOneTimeDonation:true })
   }
 
@@ -266,17 +268,21 @@ class App extends React.Component {
           this.state.mockDaiAddress,
         )*/
         const flow = (await sf.agreements.cfa.getNetFlow.call(daix.address, accounts[0])).toString()
-
+        const accountsDaiBalance = (wad4human(await dai.balanceOf.call(accounts[0])))
+        const accountsDaixBalance = (wad4human(await daix.balanceOf.call(accounts[0])))
+        // const userDaixAllowance = (wad4human(await dai.allowance.call(accounts[0], daix.address)))
         this.setState({
           web3,
           accounts,
           mockDaiContract: dai,
           provider,
           flow,
+          accountsDaiBalance,
+          accountsDaixBalance,
         })
       } catch (error) {
         alert(`No wallet detected or wrong network.\nAdd a crypto wallet such as Metamask to your browser and switch it to Goerli network.`);
-      } 
+      }
     }
   }
 
@@ -356,16 +362,13 @@ class App extends React.Component {
   }
 
   batchCall = async(_amount) => {
-    if(_amount !== 0) {
+    if(_amount !== 0 && this.state.accounts !== null && this.state.accountsDaixBalance !== '0.00000') {
       const userAddress = this.state.accounts[0]
       const recipient = this.state.irrigateAddress
       const amount = _amount.toString()
       const amountPerSecond = (Math.floor((_amount)*(10**18)/(3600*24*30))).toString()
       let batch = new sf.web3.BatchRequest()
-      const userAllowance = wad4human(await dai.allowance.call(userAddress, daix.address))
-      // if (userAllowance === 0) {
-      //   batch.add(dai.approve(daix.address,"115792089237316195423570985008687907853269984665640564039457584007913129639935",{ from: userAddress }))
-      // }
+      // batch.add(dai.approve(daix.address,"115792089237316195423570985008687907853269984665640564039457584007913129639935",{ from: userAddress }))
       // batch.add(daix.upgrade(sf.web3.utils.toWei(amount, "ether"),{ from: userAddress }))
       batch.add(sf.host.callAgreement(sf.agreements.cfa.address,sf.agreements.cfa.contract.methods.createFlow(daix.address, recipient, amountPerSecond, "0x").encodeABI(),{ from: userAddress }))
       try {
@@ -380,19 +383,28 @@ class App extends React.Component {
     if(_amount >= 10) {
       const userAddress = this.state.accounts[0]
       const appAddress = this.state.irrigateAddress
+      const daiBalance = this.state.accountsDaiBalance
       const amount = _amount.toString()
-      if (await dai.balanceOf(userAddress) >= 10) {
+      // if (await dai.balanceOf(userAddress) >= _amount) {
+      if (daiBalance >= _amount) {
+        this.setState({
+          daiWarning: false
+        })
         await dai.transfer(
           appAddress,
           sf.web3.utils.toWei(amount, "ether"),
           { from: userAddress }
         )
+      } else {
+        this.setState({
+          daiWarning: true
+        })
       }
     }
   }
 
   render() {
-    console.log(this.state)
+    // console.log(this.state)
     let FormAddUserButton = (
       <div className="NavbarRightCorner">
         <button className="displayFormAddUserButton description" onClick={(e) => this.setState({ displayFormAddUser:true })}>Sign up</button>
@@ -478,6 +490,8 @@ class App extends React.Component {
               batchCall={ this.batchCall }
               stopCFA={ this.stopCFA }
               flow={ this.state.flow }
+              accountsDaiBalance={ this.state.accountsDaiBalance }
+              accountsDaixBalance={ this.state.accountsDaixBalance }
             />
           </div>
         </div> 
@@ -498,6 +512,9 @@ class App extends React.Component {
             closeOneTimeDonation={ (e) => this.setState({ displayOneTimeDonation:false }) }
             oneTransfer={ this.oneTransfer }
             irrigateAddress={ this.state.irrigateAddress }
+            accounts={ this.state.accounts }
+            accountsDaiBalance={ this.state.accountsDaiBalance }
+            daiWarning={ this.state.daiWarning }
           />
         </div>
         <CausesList

@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import Zoom from 'react-reveal/Zoom'
-import axios from 'axios';
-import getWeb3 from '../utils/getWeb3';
+import axios from 'axios'
+import getWeb3 from '../utils/getWeb3'
+import sfLogo from '../images/superfluid_logo.svg'
 
 class Subscription extends Component {
 	constructor(props){
@@ -90,7 +91,30 @@ class Subscription extends Component {
   }
 
 	render() {
-    // console.log(this.state)
+    console.log("daix balance:", this.props.accountsDaixBalance)
+    let SuperfluidWarning = (
+      <div>
+        <div className="SuperfluidWarning">You must have DAI deposited in your Superfluid account to subscribe monthly</div>
+        <div className="SuperfluidWarning">Mint some DAI here and make a deposit at Superfluid</div>
+        <div className="SubscriptionButtonContainer">
+          {/*<a className="FormMintDaiButton" href="https://goerli-faucet.slock.it/" target="_blank">Get Goerli ETH</a>*/}
+          <button className="FormMintDaiButton" onClick={() => window.open("https://goerli-faucet.slock.it/", "_blank") }>Get Goerli ETH</button>
+          <button className="FormMintDaiButton" onClick={ this.props.mintDAI } >Mint DAI</button>
+          <a className="SFbutton" href="https://app.superfluid.finance/" target="_blank"><img src={sfLogo} /></a>
+        </div>
+      </div>
+    )
+    if (this.props.accountsDaixBalance !== '0.00000' || this.props.accounts === null) {
+      SuperfluidWarning = null
+    }
+
+    let WarningPhrase = (
+      <div className="WarningPhrase">Please connect your wallet first</div>
+    )
+    if (this.props.accounts !== null) {
+      WarningPhrase = null
+    }
+
     let SetSubscription = (
       <div> 
         <div className="StreamTitle_Close">
@@ -106,7 +130,12 @@ class Subscription extends Component {
           <button className="subscriptionAmountButton" name="subscriptionAmount" onClick={ this.handleChange } value="200" >200 DAI</button>
           <button className="subscriptionAmountButton" name="subscriptionAmount" onClick={ this.handleChange } value="500" >500 DAI</button>
         </div>
-        <button className={this.state.subscriptionAmount === 0 ? ("FormAddCauseButtonDisabled") : ("FormAddCauseButton") } onClick={ () => this.props.batchCall(this.state.subscriptionAmount)}>Give {this.state.subscriptionAmount} DAI monthly</button>
+        <button className={this.state.subscriptionAmount === 0 || this.props.accounts === null || this.props.accountsDaixBalance === '0.00000' ? ("FormAddCauseButtonDisabled") : ("FormAddCauseButton") } 
+          onClick={ () => this.props.batchCall(this.state.subscriptionAmount)}>
+          Give {this.state.subscriptionAmount} DAI monthly
+        </button>
+        {WarningPhrase}
+        {SuperfluidWarning}
       </div>
     )
 
