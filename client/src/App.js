@@ -2,7 +2,9 @@ import React from 'react'
 // import getWeb3 from './utils/getWeb3'
 import Web3 from 'web3'
 import Web3Modal from "web3modal"
-import { logoutOfWeb3Modal } from './utils/web3Modal'
+// import WalletConnectProvider from "@walletconnect/web3-provider"
+// import { logoutOfWeb3Modal } from './utils/web3Modal'
+import { web3Modal, logoutOfWeb3Modal } from "./utils/web3Modal";
 import axios from 'axios'
 import './css/App.scss'
 import MockDAI from './contracts/MockDAI.json'
@@ -230,16 +232,6 @@ class App extends React.Component {
       logoutOfWeb3Modal()
     } else {
       try {
-        /*const providerOptions = {
-           //See Provider Options Section 
-        };*/
-
-        const web3Modal = new Web3Modal({
-          network: "goerli", // optional
-          cacheProvider: true // optional
-          // providerOptions // required
-        });
-
         const provider = await web3Modal.connect();
         const web3 = new Web3(provider);
 
@@ -262,11 +254,7 @@ class App extends React.Component {
         await web3.eth.net.getNetworkType((err, network) => {
           this.setState({network: network})
         })
-        // const accounts = await web3.eth.getAccounts()
-        /*const instanceDAI = new web3.eth.Contract(
-          MockDAI,
-          this.state.mockDaiAddress,
-        )*/
+
         const flow = (await sf.agreements.cfa.getNetFlow.call(daix.address, accounts[0])).toString()
         const accountsDaiBalance = (wad4human(await dai.balanceOf.call(accounts[0])))
         const accountsDaixBalance = (wad4human(await daix.balanceOf.call(accounts[0])))
