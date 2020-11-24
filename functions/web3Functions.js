@@ -1,19 +1,31 @@
+//Web3
 const HDWalletProvider = require('@truffle/hdwallet-provider')
 const Web3 = require('web3')
+//Goerli
 const goerliSeed = process.env.GOERLI_MNEMONIC
 const goerliProvider = process.env.GOERLI_PROVIDER_URL
 const provider = new HDWalletProvider(goerliSeed, goerliProvider)
-// const seed = process.env.SEED
-// const ropstenProvider = process.env.INFPROVIDER
-// const provider = new HDWalletProvider(seed, ropstenProvider)
 const web3 = new Web3(provider)
 const { toWad, toBN, fromWad, wad4human } = require("@decentral.ee/web3-helpers")
+//Irrigate
 const irrigateAddress = '0xfc94ffaf800fcf5b146ceb4fc1c37db604305ae5'
-
+const irrigateInterestsAddress = ''
+//Aave
+// const mockDaiContractAbi = require('../contracts_old/MockDAI.json') //May not be needed
+// const mockDaiContractAddress = '0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108' //May not be needed
+// const mockDaiContractInstance = new web3.eth.Contract(mockDaiContractAbi, mockDaiContractAddress) //May not be needed
+const LendingPoolAddressesProviderABI = require ('../contracts_old/LendingPoolAddressesProvider.json')
+const lpAddressProviderAddress = '0x1c8756FD2B28e9426CDBDcC7E3c4d64fa9A54728'//to deploy to goerli
+const lpAddressProviderContract = new web3.eth.Contract(LendingPoolAddressesProviderABI, lpAddressProviderAddress)
+const LendingPoolABI = require ('../contracts_old/LendingPool.json')
+const ADaiTokenABI = require('../contracts_old/ADaiToken.json')
+const aDaiToken = '0xcB1Fe6F440c49E9290c3eb7f158534c2dC374201'//to deploy to goerli
+const aDaiContract = new web3.eth.Contract(ADaiTokenABI, aDaiToken)
+//Superfluid
 const SuperfluidSDK = require("@superfluid-finance/ethereum-contracts");
 const sf = new SuperfluidSDK.Framework({
-    version: "0.1.2-preview-20201014", // This is for using different protocol release
-    web3Provider: web3.currentProvider // your web3 provider
+  version: "0.1.2-preview-20201014", // This is for using different protocol release
+  web3Provider: web3.currentProvider // your web3 provider
 })
 
 let daiAddress

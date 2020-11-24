@@ -37,19 +37,19 @@ app.use('/user', userRoutes)
 app.use('/donations', donationsRoutes)
 
 //Superfluid protocol
-const superfluidFunctions = require('./functions/superfluidFunctions')
+const web3Functions = require('./functions/web3Functions')
 const aaveFunctions = require('./functions/aaveFunctions')
 const causesFunctions = require('./functions/causesFunctions')
 const interestsFunctions = require('./functions/interestsFunctions')
 
 async function launcher(indexID) {
 	//Initialize superfluid and create an index
-	await superfluidFunctions.sfStart(indexID)
-	// await superfluidFunctions.sfCreateIndex(indexID)
-	// await superfluidFunctions.sfUpdateSubscription(indexID, '0x0A51e5F32dE5dE418eF54670b992F1cb75f80a65')
-	// await superfluidFunctions.sfApproveSubscription(indexID, '0x0A51e5F32dE5dE418eF54670b992F1cb75f80a65')
-	// await superfluidFunctions.sfDistributeDonations(indexID, 2000, 6)
-	// await superfluidFunctions.sfDowngradeTotal('0x1A7e2a64920B245F6951b674dFcc4105ea6d39f8')
+	await web3Functions.sfStart(indexID)
+	// await web3Functions.sfCreateIndex(indexID)
+	// await web3Functions.sfUpdateSubscription(indexID, '0x0A51e5F32dE5dE418eF54670b992F1cb75f80a65')
+	// await web3Functions.sfApproveSubscription(indexID, '0x0A51e5F32dE5dE418eF54670b992F1cb75f80a65')
+	// await web3Functions.sfDistributeDonations(indexID, 2000, 6)
+	// await web3Functions.sfDowngradeTotal('0x1A7e2a64920B245F6951b674dFcc4105ea6d39f8')
 
 	//App redeem, distribute, deposit monthly function, launch each 1st of the month
 	//Before function, App balances: 
