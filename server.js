@@ -45,6 +45,7 @@ const interestsFunctions = require('./functions/interestsFunctions')
 async function launcher(indexID) {
 	//Initialize superfluid and create an index
 	await superfluidFunctions.sfStart(indexID)
+	// await superfluidFunctions.sfCreateIndex(indexID)
 	// await superfluidFunctions.sfUpdateSubscription(indexID, '0x0A51e5F32dE5dE418eF54670b992F1cb75f80a65')
 	// await superfluidFunctions.sfApproveSubscription(indexID, '0x0A51e5F32dE5dE418eF54670b992F1cb75f80a65')
 	// await superfluidFunctions.sfDistributeDonations(indexID, 2000, 6)
@@ -108,7 +109,7 @@ async function launcher(indexID) {
 		});
 	})*/
 }
-//launcher(1002)
+launcher(1002)
 
 
 //Heroku check

@@ -16,6 +16,13 @@ const sf = new SuperfluidSDK.Framework({
     web3Provider: web3.currentProvider // your web3 provider
 })
 
+let daiAddress
+let dai
+let daixWrapper
+let daix
+let idaAddress
+let idaContract
+
 module.exports = {
 	sfStart: async function(_indexID) {
 		//init sf
@@ -23,10 +30,10 @@ module.exports = {
 		console.log("Superfluid initializing")
 
 		//get addresses
-		const daiAddress = await sf.resolver.get("tokens.fDAI")
-		const dai = await sf.contracts.TestToken.at(daiAddress)
-		const daixWrapper = await sf.getERC20Wrapper(dai)
-		const daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress)
+		daiAddress = await sf.resolver.get("tokens.fDAI")
+		dai = await sf.contracts.TestToken.at(daiAddress)
+		daixWrapper = await sf.getERC20Wrapper(dai)
+		daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress)
 		console.log("Dai contract address: ", daiAddress)
 		console.log("Daix wrapper address: ", daixWrapper.wrapperAddress)
 
@@ -51,8 +58,8 @@ module.exports = {
 		}
 
 		//check if publishing index exists
-		const idaAddress = await sf.agreements.ida.address
-		const idaContract = await sf.contracts.IInstantDistributionAgreementV1.at(idaAddress)
+		idaAddress = await sf.agreements.ida.address
+		idaContract = await sf.contracts.IInstantDistributionAgreementV1.at(idaAddress)
 		const indexID = _indexID
 		const response = await idaContract.getIndex(daix.address, irrigateAddress, indexID)
 		if (response.exist != true) {
@@ -65,11 +72,8 @@ module.exports = {
 	},
 
 	sfApproveDaix: async function(_userAddress) {
-		const daiAddress = await sf.resolver.get("tokens.fDAI")
-		const dai = await sf.contracts.TestToken.at(daiAddress)
-		const daixWrapper = await sf.getERC20Wrapper(dai)
-		const daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress)
 		const daixAllowance = wad4human(await dai.allowance(_userAddress, daix.address))
+
 		if (daixAllowance == 0) {
 			dai.approve(daix.address, "1"+"0".repeat(42), { from: _userAddress })
 			console.log("Daix approved")
@@ -79,61 +83,39 @@ module.exports = {
 	},	
 
 	sfUpgradeDaix: async function(_amount, _fromAddress) {
-		const daiAddress = await sf.resolver.get("tokens.fDAI")
-		const dai = await sf.contracts.TestToken.at(daiAddress)
-		const daixWrapper = await sf.getERC20Wrapper(dai)
-		const daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress)
 		await daix.upgrade(web3.utils.toWei(_amount, "ether"), { from: _fromAddress })
 		console.log("daix upgraded by ", _amount, "from", _fromAddress)
 	},
 
 	sfCreateIndex: async function(_indexNumber) {
-		const daiAddress = await sf.resolver.get("tokens.fDAI")
-		const dai = await sf.contracts.TestToken.at(daiAddress)
-		const daixWrapper = await sf.getERC20Wrapper(dai)
-		const daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress)
-		sf.host.callAgreement(sf.agreements.ida.address, sf.agreements.ida.contract.methods.createIndex(daix.address, _indexNumber, "0x").encodeABI(), { from: irrigateAddress })
-		console.log("publishing index created, number: ", _indexNumber)
+		const response = await idaContract.getIndex(daix.address, irrigateAddress, _indexNumber)
+		if (response.exist != true) {
+			await sf.host.callAgreement(sf.agreements.ida.address, sf.agreements.ida.contract.methods.createIndex(daix.address, _indexNumber, "0x").encodeABI(), { from: irrigateAddress })
+			console.log("Publishing index created, id: ", _indexNumber)
+		} else {
+			console.log("Publishing index exists, id: ", _indexNumber)
+		}
 	},
 
 	sfUpdateSubscription: async function(_indexID, _causeAddress) {
-		const daiAddress = await sf.resolver.get("tokens.fDAI")
-		const dai = await sf.contracts.TestToken.at(daiAddress)
-		const daixWrapper = await sf.getERC20Wrapper(dai)
-		const daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress)
 		const indexID = _indexID
-		//Subscribe
 		await	sf.host.callAgreement(sf.agreements.ida.address, sf.agreements.ida.contract.methods.updateSubscription(daix.address, indexID, _causeAddress, 1, "0x").encodeABI(), { from: irrigateAddress })
 		console.log(_causeAddress, " subscribed to index ", _indexID)
 	},
 
 	sfApproveSubscription: async function(_indexID, _causeAddress) {
-		const daiAddress = await sf.resolver.get("tokens.fDAI")
-		const dai = await sf.contracts.TestToken.at(daiAddress)
-		const daixWrapper = await sf.getERC20Wrapper(dai)
-		const daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress)
 		const indexID = _indexID
-		//Approve
 		await	sf.host.callAgreement(sf.agreements.ida.address, sf.agreements.ida.contract.methods.approveSubscription(daix.address, irrigateAddress, indexID, "0x").encodeABI(), { from: _causeAddress })
 		console.log(_causeAddress, " approved to index ", _indexID)
 	},
 
 	sfDeleteSubscription: async function(_indexID, _causeAddress) {
-		const daiAddress = await sf.resolver.get("tokens.fDAI")
-		const dai = await sf.contracts.TestToken.at(daiAddress)
-		const daixWrapper = await sf.getERC20Wrapper(dai)
-		const daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress)
 		const indexID = _indexID
-		//Delete
 		await	sf.host.callAgreement(sf.agreements.ida.address, sf.agreements.ida.contract.methods.deleteSubscription(daix.address, irrigateAddress, indexID, _causeAddress, "0x").encodeABI(), { from: irrigateAddress })
 		console.log(_causeAddress, " subscribtion deleted from index ", _indexID)
 	},
 
 	sfDistributeDonations: async function(_indexID, _amount, _causesCount) {
-		const daiAddress = await sf.resolver.get("tokens.fDAI")
-		const dai = await sf.contracts.TestToken.at(daiAddress)
-		const daixWrapper = await sf.getERC20Wrapper(dai)
-		const daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress)
 		const indexID = _indexID
 		const totalAmount = _amount.toString()
 		const individualAmount = Math.floor(_amount/_causesCount).toString()
@@ -145,10 +127,6 @@ module.exports = {
 	},
 
 	sfDowngradeTotal: async function(_causeAddress) {
-		const daiAddress = await sf.resolver.get("tokens.fDAI")
-		const dai = await sf.contracts.TestToken.at(daiAddress)
-		const daixWrapper = await sf.getERC20Wrapper(dai)
-		const daix = await sf.contracts.ISuperToken.at(daixWrapper.wrapperAddress)
 		const causeBalance = wad4human(await daix.balanceOf(_causeAddress))
 		console.log("Cause balance",causeBalance, "daix")
 		await daix.downgrade(web3.utils.toWei(causeBalance, "ether"), { from: _causeAddress })
