@@ -18,7 +18,6 @@ class Subscription extends Component {
   }
 
 	render() {
-    console.log("daix balance:", this.props.accountsDaixBalance)
     let SuperfluidWarning = (
       <div>
         <div className="SuperfluidWarning">You must have DAI deposited in your Superfluid account to subscribe monthly</div>

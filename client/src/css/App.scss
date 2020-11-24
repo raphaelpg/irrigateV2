@@ -7,6 +7,7 @@
 /*VARIABLES SETUP*/
 $irrigateBackground: darkgreen;
 $irrigateFontColor: beige;
+$irrigateDarkFontColor: #262626;
 $causeListWidth: 1110px;
 $causeFontColor: #454545;
 $standardShadow: 3px 3px 10px 0px grey;
@@ -315,7 +316,7 @@ $standardShadow: 3px 3px 10px 0px grey;
 .FormAddCauseFields{
   padding: 0 4%;
   width: 92%;
-  color: grey;
+  color: $irrigateDarkFontColor;
   font-weight: bold;
 }
 .FormAddCauseFields textarea,
@@ -323,7 +324,7 @@ $standardShadow: 3px 3px 10px 0px grey;
   width: 75%;
 }
 .subscriptionAmountContainer{
-  margin: auto;
+  margin: 30px auto 0px auto;
   display: grid;
   width: 500px;
   grid-template-columns: repeat(3,1fr);
@@ -350,7 +351,9 @@ $standardShadow: 3px 3px 10px 0px grey;
   box-shadow: 0 1px 3px 0 grey;
 }
 .SubscriptionDetailsTop{
-  margin: 30px 0;
+  margin: 15px 0 0 0;
+  color: $irrigateDarkFontColor;
+  font-weight: bold;
 }
 .FormAddCauseButton{
   margin: 20px auto 20px auto;

@@ -3,21 +3,15 @@ import Web3 from 'web3'
 import { web3Modal, logoutOfWeb3Modal } from './utils/web3Modal'
 import axios from 'axios'
 import './css/App.scss'
-import MockDAI from './contracts/MockDAI.json'
 import HomeDescription from './components/HomeDescription'
 import FormAddCause from './components/FormAddCause'
 import CausesList from './components/CausesList'
 import Footer from './components/Footer'
-import FormAddUser from './components/FormAddUser'
-import FormLogIn from './components/FormLogIn'
-import Stream from './components/Stream'
 import Subscription from './components/Subscription'
 import OneTimeDonation from './components/OneTimeDonation'
-import Logout from './components/Logout'
 const logo = require('./images/planet.png')
 const { wad4human } = require('@decentral.ee/web3-helpers')
 const SuperfluidSDK = require('@superfluid-finance/ethereum-contracts')
-const TruffleContract = require('@truffle/contract')
 
 let dai;
 let daix;
@@ -50,8 +44,10 @@ class App extends React.Component {
     daiWarning: false,
     userDaixAllowance: null,
     irrigateAddress: '0xFC94FFAf800FcF5B146ceb4fc1C37dB604305ae5',
-    mockDaiAddress: '0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108',
+    mockDaiAddress: '0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108',//using SF mock dai contract instead
     mockDaiContract: null,
+    subscriptionIntervalID: '',
+    cancelIntervalID: '',
   }
 
   componentDidMount = async () => {
@@ -59,6 +55,7 @@ class App extends React.Component {
     this.checkConnection()
   }
 
+  /*Retrieve associations from the server*/
   getIrrigateCauses = async () => {
     try {
       axios.get('/api')
@@ -74,20 +71,24 @@ class App extends React.Component {
     }
   }
 
+  /*Display subscription popup*/
   displaySubscription = async () => {
     this.setState({ displaySubscription:true })
   }
 
+  /*Display one time donation popup*/
   displayOneTimeDonation = async () => {
     this.setState({ displayOneTimeDonation:true })
   }
 
+  /*Check if wallet already connected at launch*/
   checkConnection = async () => {
     if (web3Modal.cachedProvider) {
       this.connectWallet();
     }
   };
 
+  /*Connect wallet and initialize Superfluid and state variables*/
   connectWallet = async () => {
     if (this.state.provider) {
       logoutOfWeb3Modal()
@@ -135,6 +136,7 @@ class App extends React.Component {
     }
   }
 
+  /*Mint 100 DAI from sf mock dai*/
   mintDAI = async() => {
     const mockDaiContract = this.state.mockDaiContract
     const userAddress = this.state.accounts[0]
@@ -149,6 +151,7 @@ class App extends React.Component {
     })
   }
 
+  /*Approve max mock dai*/
   approveDAI = async() => {
     const userAddress = this.state.accounts[0]
     await dai
@@ -157,13 +160,9 @@ class App extends React.Component {
         "115792089237316195423570985008687907853269984665640564039457584007913129639935",
         { from: userAddress }
       )
-/*      .then(async i =>
-        setDAIapproved(
-          wad4human(await dai.allowance.call(userAddress, daix.address))
-        )
-      );*/
   }
 
+  /*SF upgrade function*/
   upgradeDAIx = async() => {
     const userAddress = this.state.accounts[0]
     await daix
@@ -173,6 +172,7 @@ class App extends React.Component {
       )
   }
 
+  /*Create SF Constant Flow Agreement*/
   createCFA = async(_amount) => {
     const userAddress = this.state.accounts[0]
     const recipient = this.state.irrigateAddress
@@ -184,38 +184,68 @@ class App extends React.Component {
       { from: userAddress })
   }
 
+  /*Stop SF Constant Flow Agreement*/
   stopCFA = async() => {
     const userAddress = this.state.accounts[0]
     const recipient = this.state.irrigateAddress
-    await sf.host.callAgreement(
-      sf.agreements.cfa.address,
-      sf.agreements.cfa.contract.methods
-        .deleteFlow(daix.address, userAddress, recipient, "0x")
-        .encodeABI(),
-      { from: userAddress })
+    try{
+      await sf.host.callAgreement(
+        sf.agreements.cfa.address,
+        sf.agreements.cfa.contract.methods
+          .deleteFlow(daix.address, userAddress, recipient, "0x")
+          .encodeABI(),
+        { from: userAddress })
+      .then(
+        this.setState({ displaySubscription:false }),
+        this.cancelInterval()
+      )
+    } catch(err) {
+      console.log(err)
+    }
   }
 
-  getFlow = async() => {
-    const userAddress = this.state.accounts[0]
-    const recipient = this.state.irrigateAddress
-    this.setState({
-      isFlow: (await sf.agreements.cfa.getFlow(daix.address, userAddress, recipient)).toString()
-    })
-  }
-
+  /*SF get user net flow*/
   getNetFlow = async() => {
-    console.log("getting NetFlow")
     const userAddress = this.state.accounts[0]
     this.setState({
       flow: (await sf.agreements.cfa.getNetFlow.call(daix.address, userAddress)).toString()
     })
   }
 
+  /*Timer after subscribing action, will be replace by event susbcription or drizzle*/
+  subscriptionInterval() {
+    let subscriptionIntervalID = setInterval(() => {
+      if (this.state.flow !== '0') {
+        //success
+        //create success confirmation pop up
+        clearInterval(this.state.subscriptionIntervalID)
+      } else {
+        this.getNetFlow()
+      }
+    }, 10000)
+    this.setState({subscriptionIntervalID: subscriptionIntervalID})
+  }
+
+  /*Timer after canceling subscription action, will be replace by event susbcription or drizzle*/
+  cancelInterval() {
+    let cancelIntervalID = setInterval(() => {
+      if (this.state.flow === '0') {
+        //success
+        //create cancel confirmation pop up
+        clearInterval(this.state.cancelIntervalID)
+      } else {
+        this.getNetFlow()
+      }
+    }, 10000)
+    this.setState({cancelIntervalID: cancelIntervalID})
+  }
+
+  /*Call SF create Constant Flow Agreement*/
   batchCall = async(_amount) => {
     if(_amount !== 0 && this.state.accounts !== null && this.state.accountsDaixBalance !== '0.00000') {
-      const userAddress = this.state.accounts[0]
-      const recipient = this.state.irrigateAddress
-      const amount = _amount.toString()
+      // const userAddress = this.state.accounts[0]
+      // const recipient = this.state.irrigateAddress
+      // const amount = _amount.toString()
       const amountPerSecond = (Math.floor((_amount)*(10**18)/(3600*24*30))).toString()
       // let batch = new sf.web3.BatchRequest()
       // batch.add(dai.approve(daix.address,"115792089237316195423570985008687907853269984665640564039457584007913129639935",{ from: userAddress }))
@@ -225,10 +255,8 @@ class App extends React.Component {
         // await batch.execute()
         await this.createCFA(amountPerSecond)
         .then(
-          setInterval( () => {
-            //if flow !0, close pop up and return else {
-            this.getNetFlow()
-          }, 10000)
+          this.setState({ displaySubscription:false }),
+          this.subscriptionInterval()
         )
       } catch(err) {
         console.log(err)
@@ -236,6 +264,7 @@ class App extends React.Component {
     }
   }
 
+  /*Simple mock DAI transfer*/
   oneTransfer = async(_amount) => {
     if(_amount >= 10) {
       const userAddress = this.state.accounts[0]
@@ -260,20 +289,14 @@ class App extends React.Component {
   }
 
   render() {
-    // console.log(this.state)
-    let FormAddUserButton = (
-      <div className="NavbarRightCorner">
-        <button className="displayFormAddUserButton description" onClick={(e) => this.setState({ displayFormAddUser:true })}>Sign up</button>
-        <button className="displayFormLoginUserButton description" onClick={(e) => this.setState({ displayFormLogIn:true })}>Log in</button>
-      </div>
-    )
+    // console.log("flow:",this.state.flow)
 
+    /*Display if user have a subscription active*/
     let FormUserConnected = (
       <div>
         <button className="displayFormAddUserButton description" onClick={ this.displaySubscription }>Manage your Subscription</button>
       </div>
     )
-
     if (this.state.accounts === null || this.state.flow === '0') {
       FormUserConnected = null
     }
