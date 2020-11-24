@@ -51,6 +51,17 @@ async function launcher(indexID) {
 	// await superfluidFunctions.sfDistributeDonations(indexID, 2000, 6)
 	// await superfluidFunctions.sfDowngradeTotal('0x1A7e2a64920B245F6951b674dFcc4105ea6d39f8')
 
+	//App redeem, distribute, deposit monthly function, launch each 1st of the month
+	//Before function, App balances: 
+	// X(aDAI), 
+	// Y(DAIx), 
+	// Z(DAI)
+	//1 Redeem Aave aDAI to DAI
+	//2 Upgrade DAI to DAIx
+	//3 Perform Instant Distribution of DAIx
+	//4 Downgrade DAIx to DAI
+	//5 Deposit Aave DAI to aDAI
+
 	//Function for batch time management, launched each 1st and 15th of every month at 00h01:
 	//Redeem DAIs, perform transfers, deposit DAIs
 	//A batch is an Object store in MongoDB database that contains all the projects addresses that have received funds and the corresponding
