@@ -51,74 +51,48 @@ async function launcher(indexID) {
 	// await web3Functions.sfDistributeDonations(indexID, 2000, 6)
 	// await web3Functions.sfDowngradeTotal('0x1A7e2a64920B245F6951b674dFcc4105ea6d39f8')
 
+	//Initialize aave and redirect interests
+	//await web3Functions.aaveStart()
+		//=> get DAI
+		//=> deposit DAI
+		//=> redirect interests to app second address
+
 	//App redeem, distribute, deposit monthly function, launch each 1st of the month
-	//Before function, App balances: 
-	// X(aDAI), 
-	// Y(DAIx), 
-	// Z(DAI)
-	//1 Redeem Aave aDAI to DAI
-	//2 Upgrade DAI to DAIx
-	//3 Perform Instant Distribution of DAIx
-	//4 Downgrade DAIx to DAI
-	//5 Deposit Aave DAI to aDAI
+	//Before execution, App balances: 
+	// (X)aDAI, 
+	// (Y)DAIx, 
+	// (Z)DAI
+	//1 Redeem Aave (X)aDAI to (X)DAI
+	//2 Upgrade (X)DAI to (X)DAIx
+	//3 Perform Instant Distribution of (X)DAIx
+	//4 Downgrade (Y)DAIx to (Y)DAI
+	//5 Deposit Aave (Z+Y)DAI to (Z+Y)aDAI
 
-	//Function for batch time management, launched each 1st and 15th of every month at 00h01:
-	//Redeem DAIs, perform transfers, deposit DAIs
-	//A batch is an Object store in MongoDB database that contains all the projects addresses that have received funds and the corresponding
-	//total funds they received during a period of 15 days.
-	//For example June 2020 has two batch, A and B. Batch A named 2020_6_A from 1st to 14th and Batch B named 2020_6_B from 15th to 30th. 
-/*	cron.schedule('1 0 1,15 * *', async () => {
-		//1.Create new batch to register causes donations
-			//get new batch name
-			const newBatchName = await causesFunctions.getNewBatchName()
-			//create new batch
-			await causesFunctions.createNewBatch(newBatchName)
+	//Redeel, distribute, stake function:
+	cron.schedule('1 0 1 * *', async () => {
+		console.log("redeem, distribute, stake operation started")
 
-		//2.Retrieve batch from 6 weeks ago to redistribute donations
-			//get corresponding causes and their amount
-			const batchToRetrieve = await causesFunctions.getBatchName()
-			//retrieve addresses and amounts
-			const batchCauses = await causesFunctions.retrieveBatchCauses(batchToRetrieve)
-			//total amount to redeem for this batch
-			const totalAmount = await causesFunctions.calculateBatchTotal(batchCauses)
+		/*let initialADaiBalance = await web3Functions.aaveGetADaiBalance()
+		let initialDaixBalance = await web3Functions.sfAppGetDaixBalance()
+		let initialDaiBalance = await web3Functions.sfAppGetDaiBalance()
+		
+		//1 Redeem Aave (X)aDAI to (X)DAI
+		await web3Functions.aaveRedeemADai(initialADaiBalance)
 
-		//3.Redeem all the aDAIs to aave and get the DAIs back
-		await aaveFunctions.redeemADai(totalAmount)
-				
-		//4.Transfer to each cause the correct amount
-		await aaveFunctions.transferToCauses(batchCauses)
+		//2 Upgrade (X)DAI to (X)DAIx
+		await web3Functions.sfAppUpgradeDaix(initialADaiBalance)
 
-		//5.Make a deposit to aave lending pool of all DAIs in app account	
-		await aaveFunctions.depositToLP()
-	});*/
+		//3 Perform Instant Distribution of (X)DAIx
+		let numberOfReceivers = 4 //Retrieve number of receivers
+		await web3Functions.sfDistributeDonations(indexID, initialADaiBalance, numberOfReceivers)
 
-	//Function for interests management, launched each 1st of every month at 01h01:
-/*	cron.schedule('1 1 1 * *', async () => {
-		const interestsBalance = await interestsFunctions.getInterestsAmount()
+		//4 Downgrade (Y)DAIx to (Y)DAI
+		await web3Functions.sfAppDowngradeAmount(initialDaixBalance)
 
-		interestsFunctions.getMonthParameters().then(async function(monthNeeds) {
-			
-			if (monthNeeds < interestsBalance) {
-				console.log("enough and redistribute, ", monthNeeds , "<", interestsBalance)
-				//Retrieve batch from 6 weeks ago to redistribute donations
-				//get corresponding causes and their amount
-				const batchToRetrieve = await causesFunctions.getBatchName()
-				//retrieve addresses and amounts
-				const batchCauses = await causesFunctions.retrieveBatchCauses(batchToRetrieve)
-				//transfer monthneeds to app
-
-				//redistribute rest to causes TBD
-
-			} else {
-				console.log("not enough interests, ", monthNeeds , ">", interestsBalance)
-					await interestsFunctions.redeemInterests(interestsBalance.toString())
-					await interestsFunctions.transferAllDaiToApp()
-			}
-
-		}, function(err) {
-		  console.error('The promise was rejected', err, err.stack);
-		});
-	})*/
+		//5 Deposit Aave (Z+Y)DAI to (Z+Y)aDAI
+		let depositDaiAmount = (initialDaixBalance + initialDaiBalance)
+		await web3Functions.aaveAppDeposit(depositDaiAmount)*/
+	})
 }
 launcher(1002)
 
