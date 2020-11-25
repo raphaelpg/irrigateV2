@@ -131,7 +131,8 @@ class App extends React.Component {
           accountsDaixBalance,
         })
       } catch (error) {
-        alert(`No wallet detected or wrong network.\nAdd a crypto wallet such as Metamask to your browser and switch it to Goerli network.`);
+        // alert(`No wallet detected or wrong network.\nAdd a crypto wallet such as Metamask to your browser and switch it to Goerli network.`);
+        console.log(`No wallet detected or wrong network.\nAdd a crypto wallet such as Metamask to your browser and switch it to Goerli network.`);
       }
     }
   }
