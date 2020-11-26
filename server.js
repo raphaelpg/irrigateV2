@@ -8,7 +8,7 @@ require('dotenv').config()
 const app = express()
 const routes = require('./routes/api')
 const userRoutes = require('./routes/user')
-const donationsRoutes = require('./routes/donations')
+// const donationsRoutes = require('./routes/donations')
 
 //Database connection
 const PORT = process.env.PORT || 8080
@@ -34,13 +34,13 @@ app.use(morgan('tiny'))
 //Use router
 app.use('/', routes)
 app.use('/user', userRoutes)
-app.use('/donations', donationsRoutes)
+// app.use('/donations', donationsRoutes)
 
 //Superfluid protocol
 const web3Functions = require('./functions/web3Functions')
-const aaveFunctions = require('./functions/aaveFunctions')
+// const aaveFunctions = require('./functions/aaveFunctions')
 const causesFunctions = require('./functions/causesFunctions')
-const interestsFunctions = require('./functions/interestsFunctions')
+// const interestsFunctions = require('./functions/interestsFunctions')
 
 async function launcher(indexID) {
 	//Initialize superfluid and create an index

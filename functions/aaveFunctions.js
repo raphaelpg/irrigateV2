@@ -1,8 +1,11 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider')
 const Web3 = require('web3')
-const seed = process.env.SEED
+/*const seed = process.env.SEED
 const ropstenProvider = process.env.INFPROVIDER
-const provider = new HDWalletProvider(seed, ropstenProvider)
+const provider = new HDWalletProvider(seed, ropstenProvider)*/
+const goerliSeed = process.env.GOERLI_MNEMONIC
+const goerliProvider = process.env.GOERLI_PROVIDER_URL
+const provider = new HDWalletProvider(goerliSeed, goerliProvider)
 const web3 = new Web3(provider)
 
 //All below adresses are ropsten
