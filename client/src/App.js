@@ -52,7 +52,7 @@ class App extends React.Component {
 
   componentDidMount = async () => {
     this.getIrrigateCauses()
-    this.checkConnection()
+    // this.checkConnection()
   }
 
   /*Retrieve associations from the server*/
@@ -63,8 +63,9 @@ class App extends React.Component {
           const data = response.data
           this.setState({ causes: data })
         })
-        .catch(() => {
+        .catch((response) => {
           console.log('Error retrieving causes list')
+          this.setState({ causes: [] })
         })
     } catch (e) {
       console.log(e)

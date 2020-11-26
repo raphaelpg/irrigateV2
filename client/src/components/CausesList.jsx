@@ -25,8 +25,10 @@ class CausesList extends Component {
   }
 
   displayIrrigateCauses = (causes) => {
-    if (!causes) return null
-    if (this.state.category_filter === 'All' && this.state.location_filter === 'Anywhere') {
+    if (!causes || causes === undefined || causes === null || !Array.isArray(causes)) {
+      return null
+    } 
+    else if (this.state.category_filter === 'All' && this.state.location_filter === 'Anywhere') {
       return causes.map( (cause, index) => (
         <Fade duration={1000} key={index}>
           <div className="causeDisplay">
