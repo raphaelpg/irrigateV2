@@ -19,7 +19,6 @@ const upload = multer ({ storage: storage }).single('file')
 //Send all the causes to the client
 router.get('/api', async (req, res) => {
 	let collection = await mongoose.connection.collection('causes')
-
 	collection.find({	}).toArray((err, data) => {
 		if (err) throw err
 		res.json(data)
