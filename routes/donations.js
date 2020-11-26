@@ -12,9 +12,11 @@ const HDWalletProvider = require('@truffle/hdwallet-provider')
 const Web3 = require('web3')
 require('dotenv').config()
 
-const seed = process.env.SEED
-const ropstenProvider = process.env.INFPROVIDER
-const provider = new HDWalletProvider(seed, ropstenProvider)
+// const seed = process.env.SEED
+// const ropstenProvider = process.env.INFPROVIDER
+const goerliSeed = process.env.GOERLI_MNEMONIC
+const goerliProvider = process.env.GOERLI_PROVIDER_URL
+const provider = new HDWalletProvider(goerliSeed, goerliProvider)
 const web3 = new Web3(provider)
 const irrigateAddress = '0xC1f1B00Ca70bB54a4d2BC95d07f2647889E2331a'
 const mockDaiContractAbi = require('../contracts_old/MockDAI.json')
