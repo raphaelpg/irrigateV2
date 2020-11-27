@@ -98,9 +98,9 @@ launcher(1002)
 
 
 //Heroku check
-/*if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'production_aws') {
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'production_aws') {
 	app.use(express.static('client/build'))
-}*/
+}
 
 //Start server
 app.listen(PORT, console.log(`Server listening on ${PORT}`))
