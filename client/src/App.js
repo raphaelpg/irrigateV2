@@ -224,7 +224,7 @@ class App extends React.Component {
       } else {
         this.getNetFlow()
       }
-    }, 10000)
+    }, 5000)
     this.setState({subscriptionIntervalID: subscriptionIntervalID})
   }
 
@@ -238,7 +238,7 @@ class App extends React.Component {
       } else {
         this.getNetFlow()
       }
-    }, 10000)
+    }, 5000)
     this.setState({cancelIntervalID: cancelIntervalID})
   }
 

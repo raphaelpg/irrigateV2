@@ -34,7 +34,7 @@ class FormAddCause extends Component {
 
   submit = (event) => {
     event.preventDefault()
-    const payload = new FormData()
+    /*const payload = new FormData()
 
     payload.append('name', this.state.name)
     payload.append('description', this.state.description)
@@ -54,7 +54,12 @@ class FormAddCause extends Component {
       })
       .catch(() => {
         console.log('Internal server error')
-      })
+      })*/
+    //Temporary disabled
+    alert('Your cause has been sent for validation')
+    this.resetUserInputs()
+    this.props.getIrrigateCauses()
+    this.props.closeFormAddCause()
   }
 
   resetUserInputs = () => {
