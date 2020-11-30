@@ -32,11 +32,11 @@ const aDaiContract = new web3.eth.Contract(ADaiTokenABI, aDaiToken)
 
 module.exports = {
 
-	redeemInterests: async function(amoutToRedeem) {
+	redeemInterests: async (amoutToRedeem) => {
 		console.log("redeem interests function started")
 		const amountInWei = web3.utils.toWei(amoutToRedeem, "ether").toString()
 
-		async function redeem() {
+		redeem = () => {
 			await aDaiContract.methods
 	    .redeem(amountInWei)
 	    .send({from: irrigateInterestsAddress})
@@ -49,7 +49,7 @@ module.exports = {
 	  await redeem()
 	},
 
-	getMonthParameters: async function () {
+	getMonthParameters: async () => {
 		console.log('getMonthParameters started')
 		let currentDate = new Date()
 		let currentYear = currentDate.getFullYear()
@@ -58,12 +58,12 @@ module.exports = {
 
 		const collection = mongoose.connection.collection('appParams')
 		return collection.findOne({ "name": 'monthlyNeedsParams' })
-		.then(function(item) {
+		.then((item) => {
 			return item['monthlyNeeds'][currentParametersId]
 		})
 	},
 
-	getInterestsAmount: async function() {
+	getInterestsAmount: async () => {
 		console.log("getInterestsAmount started")
 		// return interests amount
 		let interestsBalance = await aDaiContract.methods
@@ -77,14 +77,14 @@ module.exports = {
 		return interestsBalance/Math.pow(10, 18)
 	},
 
-	transferAllDaiToApp: async function() {
+	transferAllDaiToApp: async () => {
 		console.log("transferAllDaiToApp function started")
 		let daiBalance = await mockDaiContractInstance.methods.balanceOf(irrigateInterestsAddress).call({from: irrigateInterestsAddress})
 		.catch((e) => {
 	        console.log(`Error retrieving interests balance: ${e.message}`)
 	    })
 
-		async function transferToApp(daiBalance) {
+		transferToApp = async (daiBalance) => {
 			await mockDaiContractInstance.methods.transfer(irrigateAddress, daiBalance).send({from: irrigateInterestsAddress})
 			.catch((e) => {
 	      console.log(`Error transfering Dai: ${e.message}`)
@@ -92,7 +92,6 @@ module.exports = {
         transferToApp()
 	    })
 		}
-
 	  await transferToApp()
 	}
 

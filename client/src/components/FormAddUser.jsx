@@ -16,7 +16,7 @@ class FormAddUser extends Component {
     this.setState({ [name]: value })
   }
 
-	submitUser = (event) => {
+	submitUser = event => {
     event.preventDefault()
     const payload = new FormData()
 
@@ -42,7 +42,6 @@ class FormAddUser extends Component {
   }
 
 	render() {
-		
     let FormAddUser = (
       <Zoom duration={300}>
         <div className="FormAddUser">

@@ -28,7 +28,7 @@ const aDaiContract = new web3.eth.Contract(ADaiTokenABI, aDaiToken)
 
 module.exports = {
 
-	depositToLP: async function () {
+	depositToLP: async () => {
 		console.log("depositToLP started")
 		//make a deposit to aave lending pool of all DAIs in app account
 		const appMockDaiBalance = await mockDaiContractInstance.methods.balanceOf(irrigateAddress).call()
@@ -36,7 +36,7 @@ module.exports = {
 		const referralCode = '0'
 
 		//Get the latest LendingPoolCore address
-		async function getLpCoreAddress() {
+		getLpCoreAddress = async () => {
 			return await lpAddressProviderContract.methods.getLendingPoolCore().call()
 	    .catch((e) => {
         console.log(`Error getting lendingPool address: ${e.message}`)
@@ -47,7 +47,7 @@ module.exports = {
 	  const lpCoreAddress = await getLpCoreAddress()
 
 	  //Approve the LendingPoolCore address with the DAI contract
-		async function approveLpCoreAddress() {
+		approveLpCoreAddress = async () => {
 			await mockDaiContractInstance.methods
 	    .approve(
 	        lpCoreAddress,
@@ -63,7 +63,7 @@ module.exports = {
 	  await approveLpCoreAddress()
 
 	  //Get the latest LendingPool contract address
-		async function getLendingPoolAddress() {
+		getLendingPoolAddress = async () => {
 			return await lpAddressProviderContract.methods
 	    .getLendingPool()
 	    .call({from: irrigateAddress})
@@ -77,7 +77,7 @@ module.exports = {
 
 	  //Make the deposit transaction via LendingPool contract
 		const lpContract = new web3.eth.Contract(LendingPoolABI, lpAddress)
-		async function depositAllDai() {
+		depositAllDai = async () => {
 			await lpContract.methods
 	    .deposit(
         mockDaiContractAddress,
@@ -95,11 +95,11 @@ module.exports = {
 
 	},
 
-	redeemADai: async function(amoutToRedeem) {
+	redeemADai: async (amoutToRedeem) => {
 		console.log("redeemADai function started")
 		const amountInWei = web3.utils.toWei(amoutToRedeem, "ether").toString()
 
-		async function redeem() {
+		redeem = async () => {
 			await aDaiContract.methods
 	    .redeem(amountInWei)
 	    .send({from: irrigateAddress})
@@ -112,10 +112,10 @@ module.exports = {
 	  await redeem()
 	}, 
 
-	transferToCauses: async function(addressesArray) {
+	transferToCauses: async (addressesArray) => {
 		console.log("Transfer to causes started")
 
-		async function transferToOneCause(causeAddress, causeAddressAmount) {
+		transferToOneCause = async (causeAddress, causeAddressAmount) => {
 		  	await mockDaiContractInstance.methods.transfer(causeAddress, causeAddressAmount).send({from: irrigateAddress})
 		  	.catch((e) => {
 		      console.log(`Error transfering Dai: ${e.message}`)
@@ -133,7 +133,7 @@ module.exports = {
 		console.log("All transfers to causes ended")
 	},
 
-	redirectInterests: async function() {
+	redirectInterests: async () => {
 		console.log("redirectInterests started")
 		// redirect interest stream to a different address
 		const to = irrigateInterestsAddress

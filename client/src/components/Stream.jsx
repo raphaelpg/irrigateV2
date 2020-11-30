@@ -17,7 +17,7 @@ class Stream extends Component {
     this.setState({ [name]: value })
   }
 
-  displayUserCauses = (userCauses) => {
+  displayUserCauses = userCauses => {
     if (!userCauses) return null
     return userCauses.map( (cause, index) => (
       <div className="causeDisplay" key={index}>
@@ -31,7 +31,7 @@ class Stream extends Component {
     ))
   }
 
-  setStreamAmount = (event) => {
+  setStreamAmount = event => {
     event.preventDefault()
     const payload = new FormData()
     const userEmail = sessionStorage.getItem('userEmail')
@@ -55,7 +55,7 @@ class Stream extends Component {
       })
   }
 
-  donateOnce = async (event) => {
+  donateOnce = async event => {
     event.preventDefault()
     if (this.props.userCausesId.length < 1) {
       alert("Add a cause to your list first")

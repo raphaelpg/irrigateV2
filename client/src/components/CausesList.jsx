@@ -24,7 +24,7 @@ class CausesList extends Component {
     };
   }
 
-  displayIrrigateCauses = (causes) => {
+  displayIrrigateCauses = causes => {
     if (!causes || causes === undefined || causes === null || !Array.isArray(causes)) {
       return null
     } 
@@ -33,7 +33,7 @@ class CausesList extends Component {
         <Fade duration={1000} key={index}>
           <div className="causeDisplay">
             <div className="causeLogoContainer">
-              <img className="causeLogo" src={cause.logoName} alt={cause.name} />
+              <img className="causeLogo" src={cause.logo} alt={cause.name} />
             </div>
             <h3>{cause.name}</h3>
             <p>{cause.category}</p>
@@ -57,7 +57,7 @@ class CausesList extends Component {
         <Fade duration={1000} key={index}>
           <div className="causeDisplay">
             <div className="causeLogoContainer">
-              <img className="causeLogo" src={cause.logoName} alt={cause.name} />
+              <img className="causeLogo" src={cause.logo} alt={cause.name} />
             </div>
             <h3>{cause.name}</h3>
             <p>{cause.category}</p>
@@ -81,7 +81,7 @@ class CausesList extends Component {
         <Fade duration={1000} key={index}>
           <div className="causeDisplay">
             <div className="causeLogoContainer">
-              <img className="causeLogo" src={cause.logoName} alt={cause.name} />
+              <img className="causeLogo" src={cause.logo} alt={cause.name} />
             </div>
             <h3>{cause.name}</h3>
             <p>{cause.category}</p>
@@ -103,7 +103,7 @@ class CausesList extends Component {
         <Fade duration={1000} key={index}>
           <div className="causeDisplay">
             <div className="causeLogoContainer">
-              <img className="causeLogo" src={cause.logoName} alt={cause.name} />
+              <img className="causeLogo" src={cause.logo} alt={cause.name} />
             </div>
             <h3>{cause.name}</h3>
             <p>{cause.category}</p>

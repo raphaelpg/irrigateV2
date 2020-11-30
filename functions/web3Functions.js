@@ -40,7 +40,7 @@ let idaAddress
 let idaContract
 
 module.exports = {
-	sfStart: async function(_indexID) {
+	sfStart: async (_indexID) => {
 		//init sf
 		await sf.initialize()
 		console.log("Superfluid initializing")
@@ -87,7 +87,7 @@ module.exports = {
 		console.log("Superfluid initialization successful")
 	},
 
-	sfApproveDaix: async function(_userAddress) {
+	sfApproveDaix: async (_userAddress) => {
 		const daixAllowance = wad4human(await dai.allowance(_userAddress, daix.address))
 
 		if (daixAllowance == 0) {
@@ -98,27 +98,27 @@ module.exports = {
 		}
 	},	
 
-	sfUpgradeDaix: async function(_amount, _fromAddress) {
+	sfUpgradeDaix: async (_amount, _fromAddress) => {
 		await daix.upgrade(web3.utils.toWei(_amount, "ether"), { from: _fromAddress })
 		console.log("daix upgraded by ", _amount, "from", _fromAddress)
 	},
 
-	sfAppUpgradeDaix: async function(_amount) {
+	sfAppUpgradeDaix: async (_amount) => {
 		await daix.upgrade(web3.utils.toWei(_amount, "ether"), { from: irrigateAddress })
 		console.log("daix upgraded by ", _amount, "from", irrigateAddress)
 	},
 
-	sfAppGetDaixBalance: async function() {
+	sfAppGetDaixBalance: async () => {
 		let daixBalance = wad4human(await daix.balanceOf(irrigateAddress))
 		return daixBalance
 	},
 
-	sfAppGetDaiBalance: async function() {
+	sfAppGetDaiBalance: async () => {
 		let daiBalance = wad4human(await dai.balanceOf(irrigateAddress))
 		return daiBalance
 	},
 
-	sfCreateIndex: async function(_indexNumber) {
+	sfCreateIndex: async (_indexNumber) => {
 		const response = await idaContract.getIndex(daix.address, irrigateAddress, _indexNumber)
 		if (response.exist != true) {
 			await sf.host.callAgreement(sf.agreements.ida.address, sf.agreements.ida.contract.methods.createIndex(daix.address, _indexNumber, "0x").encodeABI(), { from: irrigateAddress })
@@ -128,25 +128,25 @@ module.exports = {
 		}
 	},
 
-	sfUpdateSubscription: async function(_indexID, _causeAddress) {
+	sfUpdateSubscription: async (_indexID, _causeAddress) => {
 		const indexID = _indexID
 		await	sf.host.callAgreement(sf.agreements.ida.address, sf.agreements.ida.contract.methods.updateSubscription(daix.address, indexID, _causeAddress, 1, "0x").encodeABI(), { from: irrigateAddress })
 		console.log(_causeAddress, " subscribed to index ", _indexID)
 	},
 
-	sfApproveSubscription: async function(_indexID, _causeAddress) {
+	sfApproveSubscription: async (_indexID, _causeAddress) => {
 		const indexID = _indexID
 		await	sf.host.callAgreement(sf.agreements.ida.address, sf.agreements.ida.contract.methods.approveSubscription(daix.address, irrigateAddress, indexID, "0x").encodeABI(), { from: _causeAddress })
 		console.log(_causeAddress, " approved to index ", _indexID)
 	},
 
-	sfDeleteSubscription: async function(_indexID, _causeAddress) {
+	sfDeleteSubscription: async (_indexID, _causeAddress) => {
 		const indexID = _indexID
 		await	sf.host.callAgreement(sf.agreements.ida.address, sf.agreements.ida.contract.methods.deleteSubscription(daix.address, irrigateAddress, indexID, _causeAddress, "0x").encodeABI(), { from: irrigateAddress })
 		console.log(_causeAddress, " subscribtion deleted from index ", _indexID)
 	},
 
-	sfDistributeDonations: async function(_indexID, _amount, _causesCount) {
+	sfDistributeDonations: async (_indexID, _amount, _causesCount) => {
 		const indexID = _indexID
 		const totalAmount = _amount.toString()
 		const individualAmount = Math.floor(_amount/_causesCount).toString()
@@ -157,7 +157,7 @@ module.exports = {
 		console.log("Donations distributed")
 	},
 
-	sfDowngradeTotal: async function(_causeAddress) {
+	sfDowngradeTotal: async (_causeAddress) => {
 		const causeBalance = wad4human(await daix.balanceOf(_causeAddress))
 		console.log("Cause balance",causeBalance, "daix")
 		await daix.downgrade(web3.utils.toWei(causeBalance, "ether"), { from: _causeAddress })
@@ -166,7 +166,7 @@ module.exports = {
 		console.log("New cause Dai balance: ",causeBalanceDai)
 	},
 
-	sfAppDowngradeAmount: async function(_amount) {
+	sfAppDowngradeAmount: async (_amount) => {
 		await daix.downgrade(web3.utils.toWei(_amount, "ether"), { from: irrigateAddress })
 		console.log(causeBalance, "daix downgraded")
 	},
@@ -177,7 +177,7 @@ module.exports = {
 		return aDaiBalance
 	},
 
-	aaveDepositToLP: async function () {
+	aaveDepositToLP: async () => {
 		console.log("depositToLP started")
 		//make a deposit to aave lending pool of all DAIs in app account
 		const appMockDaiBalance = await mockDaiContractInstance.methods.balanceOf(irrigateAddress).call()
@@ -185,7 +185,7 @@ module.exports = {
 		const referralCode = '0'
 
 		//Get the latest LendingPoolCore address
-		async function aaveGetLpCoreAddress() {
+		aaveGetLpCoreAddress = async () => {
 			return await lpAddressProviderContract.methods.getLendingPoolCore().call()
 	    .catch((e) => {
         console.log(`Error getting lendingPool address: ${e.message}`)
@@ -196,7 +196,7 @@ module.exports = {
 	  const lpCoreAddress = await aaveGetLpCoreAddress()
 
 	  //Approve the LendingPoolCore address with the DAI contract
-		async function aaveApproveLpCoreAddress() {
+		aaveApproveLpCoreAddress = async () => {
 			await mockDaiContractInstance.methods
 	    .approve(
 	        lpCoreAddress,
@@ -212,7 +212,7 @@ module.exports = {
 	  await aaveApproveLpCoreAddress()
 
 	  //Get the latest LendingPool contract address
-		async function aaveGetLendingPoolAddress() {
+		aaveGetLendingPoolAddress = async () => {
 			return await lpAddressProviderContract.methods
 	    .getLendingPool()
 	    .call({from: irrigateAddress})
@@ -226,7 +226,7 @@ module.exports = {
 
 	  //Make the deposit transaction via LendingPool contract
 		const lpContract = new web3.eth.Contract(LendingPoolABI, lpAddress)
-		async function aaveDepositAllDai() {
+		aaveDepositAllDai = async () => {
 			await lpContract.methods
 	    .deposit(
         mockDaiContractAddress,
@@ -252,7 +252,7 @@ module.exports = {
 		console.log("redeemADai function started")
 		const amountInWei = web3.utils.toWei(amoutToRedeem, "ether").toString()
 
-		async function redeem() {
+		redeem = async () => {
 			await aDaiContract.methods
 	    .redeem(amountInWei)
 	    .send({from: irrigateAddress})
@@ -265,10 +265,10 @@ module.exports = {
 	  await redeem()
 	}, 
 
-	aaveTransferToCauses: async function(addressesArray) {
+	aaveTransferToCauses: async (addressesArray) => {
 		console.log("Transfer to causes started")
 
-		async function aaveTransferToOneCause(causeAddress, causeAddressAmount) {
+		aaveTransferToOneCause = async (causeAddress, causeAddressAmount) => {
 		  	await mockDaiContractInstance.methods.transfer(causeAddress, causeAddressAmount).send({from: irrigateAddress})
 		  	.catch((e) => {
 		      console.log(`Error transfering Dai: ${e.message}`)
@@ -286,7 +286,7 @@ module.exports = {
 		console.log("All transfers to causes ended")
 	},
 
-	aaveRedirectInterests: async function() {
+	aaveRedirectInterests: async () => {
 		console.log("redirectInterests started")
 		// redirect interest stream to a different address
 		const to = irrigateInterestsAddress

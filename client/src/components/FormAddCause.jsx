@@ -9,11 +9,13 @@ class FormAddCause extends Component {
 			name: '',
 	    description: '',
       link: '',
-	    category: '',
-	    continent: '',
+	    category: 'Animal Protection',
+	    continent: 'Worldwide',
 	    country: '',
 	    address: '',
-	    logo: null,
+	    logo: '',
+      logo64: '',
+      logoSize: 0,
 		};
 	}
 
@@ -22,19 +24,35 @@ class FormAddCause extends Component {
     this.setState({ [name]: value })
   }
 
+  //Save image file name and convert image into base64
   handleLogoChange = event => {
-    this.setState({
-      logo: event.target.files[0]
-    })
-    let fileName = ''
-    fileName = document.getElementById('file-uploaded').value
-    let fileNameParsed = fileName.split("\\")
-    document.getElementById('file-selected').innerHTML = ' ' + fileNameParsed[fileNameParsed.length - 1]
+    let filesSelected = document.getElementById("file-uploaded").files;
+    let fileSize = filesSelected[0].size
+    if (filesSelected.length > 0 && fileSize <= 50000) {
+      let fileToLoad = filesSelected[0];
+      let fileReader = new FileReader();
+      fileReader.onload = async (fileLoadedEvent) => {
+        let srcData = await fileLoadedEvent.target.result; // <--- data: base64
+        this.setState({
+          logo64: srcData,
+        })
+      }
+      fileReader.readAsDataURL(fileToLoad)
+      let fileName = ''
+      fileName = document.getElementById('file-uploaded').value
+      let fileNameParsed = fileName.split("\\")
+      document.getElementById('file-selected').innerHTML = ' ' + fileNameParsed[fileNameParsed.length - 1]
+      this.setState({
+        logo: event.target.files[0],
+      })
+    } else {
+      alert('File size too big, image must be less than 60kb')
+    }
   }
 
-  submit = (event) => {
+  submit = event => {
     event.preventDefault()
-    /*const payload = new FormData()
+    const payload = new FormData()
 
     payload.append('name', this.state.name)
     payload.append('description', this.state.description)
@@ -44,22 +62,24 @@ class FormAddCause extends Component {
     payload.append('country', this.state.country)
     payload.append('address', this.state.address)
     payload.append('file', this.state.logo)
+    payload.append('logo64', this.state.logo64)
 
     axios.post("/save", payload)
       .then(() => {
-        alert('Your cause has been sent for validation')
+        alert('Success, your application has been sent for validation')
         this.resetUserInputs()
         this.props.getIrrigateCauses()
         this.props.closeFormAddCause()
       })
       .catch(() => {
+        alert('Error, network or image size too large (less than 50kb)')
         console.log('Internal server error')
-      })*/
+      })
     //Temporary disabled
-    alert('Your cause has been sent for validation')
+    /*alert('Your cause has been sent for validation')
     this.resetUserInputs()
     this.props.getIrrigateCauses()
-    this.props.closeFormAddCause()
+    this.props.closeFormAddCause()*/
   }
 
   resetUserInputs = () => {
@@ -67,16 +87,16 @@ class FormAddCause extends Component {
       name: '',
       description: '',
       link: '',
-      category: '',
-      continent: '',
+      category: 'Animal Protection',
+      continent: 'Worldwide',
       country: '',
       address: '',
       logo: null,
+      logo64: null,
     })
   }
 
 	render() {
-
 		let FormAddCause = (
       <Zoom duration={300}>
   			<div className="FormAddCause">
@@ -105,7 +125,7 @@ class FormAddCause extends Component {
               >
               </textarea>
             </div>
-            <label>Link</label>
+            <label>Link to website</label>
             <div className="form-input">
               <input 
                 name="link" 
@@ -116,21 +136,36 @@ class FormAddCause extends Component {
             </div>
             <label>Category</label>
             <div className="form-input">
-              <input 
+              <select 
                 name="category" 
                 type="text" 
                 value={this.state.category} 
                 onChange={this.handleChange} 
-              />
+              >
+                <option value="Animal Protection">Animal Protection</option>
+                <option value="Health">Health</option>
+                <option value="Development">Development</option>
+                <option value="Environment">Environment</option>
+                <option value="Education">Education</option>
+                <option value="Human Rights">Human Rights</option>
+              </select>
             </div>
             <label>Continent</label>
             <div className="form-input">
-              <input 
+              <select 
                 name="continent" 
                 type="text" 
                 value={this.state.continent} 
                 onChange={this.handleChange} 
-              />
+              >
+                <option value="Worldwide">Worldwide</option>
+                <option value="Africa">Africa</option>
+                <option value="America">America</option>
+                <option value="Asia">Asia</option>
+                <option value="Europe">Europe</option>
+                <option value="Oceania">Oceania</option>
+                <option value="Poles">Poles</option>
+              </select>
             </div>
             <label>Country</label>
             <div className="form-input">
@@ -150,7 +185,7 @@ class FormAddCause extends Component {
                 onChange={this.handleChange} 
               />
             </div>
-            <label>Upload a picture that will appear on the list</label>
+            <label>Upload a picture that will appear on the list (file size must be less than 60kb)</label>
             <div className="form-input">
             <label className ="FormAddCauseButtonFileLabel">Choose a file: 
               <span id="file-selected"></span>
@@ -162,8 +197,8 @@ class FormAddCause extends Component {
                 onChange={this.handleLogoChange} 
                />
             </label>
-              
             </div>
+
             <button className ="FormAddCauseButton">Submit your application</button>
           </form>
         </div>

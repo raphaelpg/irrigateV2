@@ -8,7 +8,7 @@ class Logout extends Component {
 		};
 	}
 
-	logoutUser = (event) => {
+	logoutUser = event => {
     event.preventDefault()
     sessionStorage.setItem('userAuth', 'false');
     sessionStorage.removeItem('userToken');

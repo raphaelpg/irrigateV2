@@ -42,7 +42,7 @@ const web3Functions = require('./functions/web3Functions')
 const causesFunctions = require('./functions/causesFunctions')
 // const interestsFunctions = require('./functions/interestsFunctions')
 
-async function launcher(indexID) {
+launcher = async (indexID) => {
 	//Initialize superfluid and create an index
 	await web3Functions.sfStart(indexID)
 	// await web3Functions.sfCreateIndex(indexID)

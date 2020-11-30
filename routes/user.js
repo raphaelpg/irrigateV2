@@ -13,7 +13,7 @@ require('dotenv').config()
 
 //Create user
 router.post('/signup', (req, res, next) => {
-	upload(req, res, function(err) {
+	upload(req, res, (err) => {
 		if (err instanceof multer.MulterError) {
 			return res.status(500).json(err)
 		} else if (err) {
@@ -62,7 +62,7 @@ router.post('/signup', (req, res, next) => {
 
 //User login
 router.post('/login', (req, res, next) => {
-	upload(req, res, function(err) {
+	upload(req, res, (err) => {
 		if (err instanceof multer.MulterError) {
 			return res.status(500).json(err)
 		} else if (err) {
@@ -107,7 +107,7 @@ router.post('/login', (req, res, next) => {
 
 //Update monthly donation amount
 router.post('/updateStreamAmount', checkAuth, (req, res, next) => {
-	upload(req, res, function(err) {
+	upload(req, res, (err) => {
 		if (err instanceof multer.MulterError) {
 			return res.status(500).json(err)
 		} else if (err) {
@@ -130,7 +130,7 @@ router.post('/updateStreamAmount', checkAuth, (req, res, next) => {
 
 //Save user project list
 router.post('/saveCauses', checkAuth, (req, res, next) => {
-	upload(req, res, function(err) {
+	upload(req, res, (err) => {
 		if (err instanceof multer.MulterError) {
 			return res.status(500).json(err)
 		} else if (err) {
@@ -205,7 +205,7 @@ router.delete('/:userId', (req, res, next) => {
 
 //Send back user's data
 router.post('/data', checkAuth, (req, res, next) => {
-	upload(req, res, function(err) {
+	upload(req, res, (err) => {
 		if (err instanceof multer.MulterError) {
 			return res.status(500).json(err)
 		} else if (err) {
@@ -221,7 +221,7 @@ router.post('/data', checkAuth, (req, res, next) => {
 
 //Send back user's projects parameters for displaying
 router.post('/causes', checkAuth, async (req, res) => {
-	upload(req, res, function(err) {
+	upload(req, res, (err) => {
 		if (err instanceof multer.MulterError) {
 			console.log("error here")
 			return res.status(500).json(err)
@@ -254,6 +254,5 @@ router.post('/causes', checkAuth, async (req, res) => {
 		}
 	})
 })
-
 
 module.exports = router

@@ -16,7 +16,7 @@ class FormLogIn extends Component {
     this.setState({ [name]: value })
   }
 
-	logUser = async (event) => {
+	logUser = async event => {
     event.preventDefault()
     const payload = new FormData()
 

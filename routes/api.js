@@ -1,20 +1,10 @@
 const express = require('express')
 const path = require('path')
-const multer = require('multer')
-const mongoose = require('mongoose')
 const router = express.Router()
-const IrrigateCause = require('../models/irrigateCause')
-
-const storage = multer.diskStorage({
-	destination: (req, file, cb) => {
-		cb(null, './ressources/')
-	},
-	filename: (req, file, cb) => {
-		cb(null, file.originalname)
-	}
-})
-
-const upload = multer ({ storage: storage }).single('file')
+const multer = require('multer')
+const upload = multer ({  }).single('file')
+const mongoose = require('mongoose')
+const IrrigateCauseV2 = require('../models/irrigateCauseV2')
 
 //Send all the causes to the client
 router.get('/api', async (req, res) => {
@@ -26,15 +16,15 @@ router.get('/api', async (req, res) => {
 })
 
 //Save a cause in the database
-router.post('/save', function(req, res) {
-	upload(req, res, function(err) {
+router.post('/save', (req, res) => {
+	upload(req, res, (err) => {
 		if (err instanceof multer.MulterError) {
 			return res.status(500).json(err)
 		} else if (err) {
 			return res.status(500).json(err)
 		}
 
-		const newIrrigateCause = new IrrigateCause({
+		const newIrrigateCauseV2 = new IrrigateCauseV2({
 			name: req.body.name,
 			description: req.body.description,
 			link: req.body.link,
@@ -43,17 +33,20 @@ router.post('/save', function(req, res) {
 			country: req.body.country,
 			address: req.body.address,
 			logoName : req.file.path,
+			logo : req.body.logo64,
 		})
 
+		//Save application in pendingCauses collection
 		let collection = mongoose.connection.collection('pendingCauses')
-		collection.insertOne(newIrrigateCause, (error) => {
+		collection.insertOne(newIrrigateCauseV2, (error) => {
 			if (error) {
 				res.status(500).json({ msg: 'Internal server error'})
 			}
-			res.status(200).send(req.file)
+			res.status(201).json({
+				message: 'Association saved'
+			})
 		})
 	})
 })
-
 
 module.exports = router

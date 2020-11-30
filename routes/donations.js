@@ -24,7 +24,7 @@ const mockDaiContractAddress = '0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108'
 const mockDaiContractInstance = new web3.eth.Contract(mockDaiContractAbi, mockDaiContractAddress)
 
 //Return the name of the current batch  
-function getCurrentBatchName() {
+getCurrentBatchName = () => {
 	let currentDate = new Date()
 	let currentYear = currentDate.getFullYear()
 	let currentMonth = currentDate.getMonth()
@@ -42,7 +42,7 @@ function getCurrentBatchName() {
 
 //Save a donation to the batch
 router.post('/donateOnce', (req, res, next) => {
-	upload(req, res, async function(err) {
+	upload(req, res, async (err) => {
 		if (err instanceof multer.MulterError) {
 			return res.status(500).json(err)
 		} else if (err) {
@@ -66,7 +66,7 @@ router.post('/donateOnce', (req, res, next) => {
 				newData[0].causes[causeAddress] = newAmount.toString()
 			  const myquery = { "batch": currentBatch }
 			  const newvalues = { $set: {"causes": newData[0].causes }}
-			  collection.updateOne(myquery, newvalues, function(err, response) {
+			  collection.updateOne(myquery, newvalues, (err, response) => {
 				  if (err) {
 						console.log(err)
 						return res.status(500).json({
@@ -84,7 +84,7 @@ router.post('/donateOnce', (req, res, next) => {
 				newData[0].causes[causeAddress] = receivedAmount.toString()
 				const myquery = { "batch": currentBatch }
 			  const newvalues = { $set: {"causes": newData[0].causes} }
-			  collection.updateOne(myquery, newvalues, function(err, response) {
+			  collection.updateOne(myquery, newvalues, (err, response) => {
 			  	if (err) {
 						console.log(err)
 						return res.status(500).json({
@@ -103,7 +103,7 @@ router.post('/donateOnce', (req, res, next) => {
 
 //Transfer DAI to cause
 router.post('/sendToCause', (req, res, next) => {
-	upload(req, res, async function(err) {
+	upload(req, res, async (err) => {
 		if (err instanceof multer.MulterError) {
 			return res.status(500).json(err)
 		} else if (err) {

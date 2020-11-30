@@ -3,7 +3,7 @@ const Batch = require('../models/batch')
 
 module.exports = {
 
-	getBatchName:	async function () {
+	getBatchName:	async () => {
 		console.log('getBatchName started')
 		let currentDate = new Date()
 		let currentYear = currentDate.getFullYear()
@@ -30,13 +30,13 @@ module.exports = {
 		}
 	},
 
-	retrieveBatchCauses: async function (batchName) {
+	retrieveBatchCauses: async (batchName) => {
 		console.log("retrieveBatchCauses started")
 		const batchData = await Batch.find({ batch: batchName	})
 		return batchData[0].causes
 	},
 
-	calculateBatchTotal: async function (batchCauses) {
+	calculateBatchTotal: async (batchCauses) => {
 		console.log("retrieveBatchTotal started")
 		let totalAmount = 0  
 		for (address in batchCauses) {
@@ -45,7 +45,7 @@ module.exports = {
 		return totalAmount.toString()
 	},
 
-	getNewBatchName: async function () {
+	getNewBatchName: async () => {
 		console.log('createNewBatch started')
 		let currentDate = new Date()
 		let currentYear = currentDate.getFullYear()
@@ -69,7 +69,7 @@ module.exports = {
 		}
 	},
 
-	createNewBatch: async function (newBatchName) {
+	createNewBatch: async (newBatchName) => {
 		const batch = new Batch({
 			_id: new mongoose.Types.ObjectId(),
 			batch: newBatchName,
