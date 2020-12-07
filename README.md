@@ -3,7 +3,7 @@
 Second version of Irrigate project, a platform that gather associatons with donors from around the world.  
 This version integrates Superfluid protocol so users can subscribe to monthly donations in DAI.
 
-Basic functionnalities:
+Basic functionnalities:  
 Associations can submit a form and appear in the main page after going through a validation process.  
 Donors can see all the associations available for donations and make donations.  
 
@@ -29,17 +29,18 @@ Below items have to be provided:
 Make sure you have Metamask on your browser, and connected to goerli network.  
 
 Donors can connect their wallet and perform a One Time donation or subscribe to monthly donation.    
-In order to be able to subscribe monthly, users need to register at Superfluid first:  
+In order to be able to subscribe monthly, users need to register at Superfluid's dashboard first:  
 [Superfluid](https://www.superfluid.finance/)  
 
+They can set the donation amount and subscribe through Irrigate.  
 They can unsubscribe using the "Manage your Subscription" button or directly through Superfluid dashboard.  
 
 
 ## Superfluid protocol  
 
 Superfluid is used for two things in Irrigate:  
-* Allowing users to send donations montlhy automatically, without having to confirm a new transaction every month.  
-* Using the Instant Distribution Agreement to transfer donations to every associations registered in only one transaction.  
+* Using the Constant Flow Agreement (CFA) to allow users to send donations montlhy automatically, without having to confirm a new transaction every month.  
+* Using the Instant Distribution Agreement (IDA) to transfer donations to every associations registered in only one transaction.  
 Superfluid documentation can be found [here](https://docs.superfluid.finance/superfluid/)  
 
 
