@@ -1,50 +1,51 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const morgan = require('morgan')
-const path = require('path')
-const cron = require('node-cron')
-require('dotenv').config()
+const express = require('express');
+const mongoose = require('mongoose');
+const morgan = require('morgan');
+const path = require('path');
+const cron = require('node-cron');
+require('dotenv').config();
 
-const app = express()
-const routes = require('./routes/api')
-const userRoutes = require('./routes/user')
-// const donationsRoutes = require('./routes/donations')
+const app = express();
+const routes = require('./routes/api');
+const userRoutes = require('./routes/user');
+// const donationsRoutes = require('./routes/donations');
 
 //Database connection
-const PORT = process.env.PORT || 8080
-const MONGO_URI = process.env.MONGO_URI
+// const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT;
+const MONGO_URI = process.env.MONGO_URI;
 
 mongoose.connect(MONGO_URI, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 	useCreateIndex: true
-})
+});
 
 mongoose.connection.on('connected', () => {
-	console.log('Mongoose is connected')
-})
+	console.log('Mongoose is connected');
+});
 
 //Data parsing
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
-app.use('/ressources', express.static('ressources'))
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use('/ressources', express.static('ressources'));
 
 //Routes logs in console
-app.use(morgan('tiny'))
+app.use(morgan('tiny'));
 //Use router
-app.use('/', routes)
-app.use('/user', userRoutes)
-// app.use('/donations', donationsRoutes)
+app.use('/', routes);
+app.use('/user', userRoutes);
+// app.use('/donations', donationsRoutes);
 
 //Superfluid protocol
-const web3Functions = require('./functions/web3Functions')
-// const aaveFunctions = require('./functions/aaveFunctions')
-const causesFunctions = require('./functions/causesFunctions')
-// const interestsFunctions = require('./functions/interestsFunctions')
+const web3Functions = require('./functions/web3Functions');
+// const aaveFunctions = require('./functions/aaveFunctions');
+const causesFunctions = require('./functions/causesFunctions');
+// const interestsFunctions = require('./functions/interestsFunctions');
 
 launcher = async (indexID) => {
 	//Initialize superfluid and create an index
-	await web3Functions.sfStart(indexID)
+	await web3Functions.sfStart(indexID);
 	// await web3Functions.sfCreateIndex(indexID)
 	// await web3Functions.sfUpdateSubscription(indexID, '0x0A51e5F32dE5dE418eF54670b992F1cb75f80a65')
 	// await web3Functions.sfApproveSubscription(indexID, '0x0A51e5F32dE5dE418eF54670b992F1cb75f80a65')
@@ -70,7 +71,7 @@ launcher = async (indexID) => {
 
 	//Redeel, distribute, stake function:
 	cron.schedule('1 0 1 * *', async () => {
-		console.log("redeem, distribute, stake operation started")
+		console.log("redeem, distribute, stake operation started");
 
 		/*let initialADaiBalance = await web3Functions.aaveGetADaiBalance()
 		let initialDaixBalance = await web3Functions.sfAppGetDaixBalance()
@@ -94,13 +95,13 @@ launcher = async (indexID) => {
 		await web3Functions.aaveAppDeposit(depositDaiAmount)*/
 	})
 }
-launcher(1002)
+launcher(1002);
 
 
 //Heroku check
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'production_aws') {
-	app.use(express.static('client/build'))
+	app.use(express.static('client/build'));
 }
 
 //Start server
-app.listen(PORT, console.log(`Server listening on ${PORT}`))
+app.listen(PORT, console.log(`Server listening on ${PORT}`));
