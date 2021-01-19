@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cd client && npm run build",
     "install-client": "cd client && npm install",
-    "heroku-postbuild": "npm run install-client && npm run build && node server.js",
+    "heroku-postbuild": "npm run install-client && npm run build && pm2 start server.js",
     "start": "pm2-runtime start ecosystem.config.js --env production",
     "client": "cd client && npm start",
     "dev": "concurrently -n 'server,client' -c 'red,blue' \"npm run start\" \"npm run client\""
