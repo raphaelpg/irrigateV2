@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cd client && npm run build",
     "install-client": "cd client && npm install",
-    "heroku-postbuild": "npm run install-client && npm run build && npm install && npm run start",
+    "heroku-postbuild": "npm run install-client && npm run build && npm install",
     "start": "pm2-runtime start ecosystem.config.js --env production",
     "client": "cd client && npm start",
     "dev": "concurrently -n 'server,client' -c 'red,blue' \"npm run start\" \"npm run client\""
@@ -34,9 +34,6 @@
     "node-sass": "^4.14.1",
     "pm2": "^4.4.0",
     "web3": "^1.2.9"
-  },
-  "devDependencies": {
-    "@openzeppelin/test-helpers": "^0.5.9"
   },
   "engines": {
     "node": "12.x"
