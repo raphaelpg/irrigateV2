@@ -95,7 +95,7 @@ launcher = async (indexID) => {
 		await web3Functions.aaveAppDeposit(depositDaiAmount)*/
 	})
 }
-// launcher(1002);
+launcher(1002);
 
 
 //Heroku check

@@ -13,7 +13,7 @@
     "dev": "concurrently -n 'server,client' -c 'red,blue' \"npm run start\" \"npm run client\""
   },
   "keywords": [],
-  "author": "",
+  "author": "raphaelpg",
   "license": "ISC",
   "dependencies": {
     "@decentral.ee/web3-helpers": "^0.3.4",
@@ -37,5 +37,8 @@
   },
   "devDependencies": {
     "@openzeppelin/test-helpers": "^0.5.9"
+  },
+  "engines": {
+    "node": "12.x"
   }
 }
