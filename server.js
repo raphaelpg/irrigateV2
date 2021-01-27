@@ -99,7 +99,7 @@ launcher(1002);
 
 
 //Heroku check
-if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'production_aws') {
+if (process.env.NODE_ENV === 'production') {
 	app.use(express.static('client/build'));
 	console.log("serving build");
 }
