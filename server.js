@@ -95,12 +95,13 @@ launcher = async (indexID) => {
 		await web3Functions.aaveAppDeposit(depositDaiAmount)*/
 	})
 }
-launcher(1002);
+// launcher(1002);
 
 
 //Heroku check
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'production_aws') {
 	app.use(express.static('client/build'));
+	console.log("serving build");
 }
 
 //Start server
