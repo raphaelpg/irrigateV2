@@ -312,7 +312,7 @@ class App extends React.Component {
           </div>
           <div className="NavbarRightCorner">
             {FormUserConnected}
-            <button className="connectWalletButton" onClick={ this.connectWallet }>{this.state.accounts === null ? ("Connect wallet") : ("Disconnect wallet \n" + (this.state.accounts[0].slice(0, 10) + "...")) }</button>
+            <button className="connectWalletButton" onClick={ this.connectWallet }>{this.state.accounts === null ? ("Connect Goerli wallet") : ("Disconnect wallet \n" + (this.state.accounts[0].slice(0, 10) + "...")) }</button>
             <Subscription
               displaySubscription={ this.state.displaySubscription } 
               closeSubscription={ (e) => this.setState({ displaySubscription:false }) }
