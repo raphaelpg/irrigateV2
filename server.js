@@ -11,8 +11,8 @@ const userRoutes = require('./routes/user');
 // const donationsRoutes = require('./routes/donations');
 
 //Database connection
-// const PORT = process.env.PORT || 8080;
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
+// const PORT = process.env.PORT;
 const MONGO_URI = process.env.MONGO_URI;
 
 mongoose.connect(MONGO_URI, {
