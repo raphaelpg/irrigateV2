@@ -38,7 +38,7 @@ app.use('/user', userRoutes);
 // app.use('/donations', donationsRoutes);
 
 //Superfluid protocol
-const web3Functions = require('./functions/web3Functions');
+// const web3Functions = require('./functions/web3Functions');
 // const aaveFunctions = require('./functions/aaveFunctions');
 const causesFunctions = require('./functions/causesFunctions');
 // const interestsFunctions = require('./functions/interestsFunctions');

@@ -7,7 +7,7 @@ const goerliSeed = process.env.GOERLI_MNEMONIC
 const goerliProvider = process.env.GOERLI_PROVIDER_URL
 const provider = new HDWalletProvider(goerliSeed, goerliProvider)
 const web3 = new Web3(provider)
-const { toWad, toBN, fromWad, wad4human } = require("@decentral.ee/web3-helpers")
+// const { toWad, toBN, fromWad, wad4human } = require("@decentral.ee/web3-helpers")
 
 //Irrigate
 const irrigateAddress = '0xfc94ffaf800fcf5b146ceb4fc1c37db604305ae5'
@@ -54,18 +54,18 @@ module.exports = {
 		console.log("Daix wrapper address: ", daixWrapper.wrapperAddress)
 
 		//check mock dai app's balance
-		const daiBalance = wad4human(await dai.balanceOf(irrigateAddress))
+		// const daiBalance = wad4human(await dai.balanceOf(irrigateAddress))
 		const daiBalanceTarget = 10100
 		if (daiBalance < daiBalanceTarget) {
 			let mintAmount = (daiBalanceTarget - daiBalance).toString() 
 			dai.mint(irrigateAddress, web3.utils.toWei(mintAmount, "ether"), { from: irrigateAddress })	
 			console.log("Dai minted")
 		}
-		const newDaiBalance = wad4human(await dai.balanceOf(irrigateAddress))
+		// const newDaiBalance = wad4human(await dai.balanceOf(irrigateAddress))
 		console.log("Dai balance: ", newDaiBalance)
 
 		//verify if daix is approved
-		const daixAllowance = wad4human(await dai.allowance(irrigateAddress, daix.address))
+		// const daixAllowance = wad4human(await dai.allowance(irrigateAddress, daix.address))
 		if (daixAllowance == 0) {
 			dai.approve(daix.address, "1"+"0".repeat(42), { from: irrigateAddress })
 			console.log("Daix approved")
@@ -88,7 +88,7 @@ module.exports = {
 	},
 
 	sfApproveDaix: async (_userAddress) => {
-		const daixAllowance = wad4human(await dai.allowance(_userAddress, daix.address))
+		// const daixAllowance = wad4human(await dai.allowance(_userAddress, daix.address))
 
 		if (daixAllowance == 0) {
 			dai.approve(daix.address, "1"+"0".repeat(42), { from: _userAddress })
@@ -109,12 +109,12 @@ module.exports = {
 	},
 
 	sfAppGetDaixBalance: async () => {
-		let daixBalance = wad4human(await daix.balanceOf(irrigateAddress))
+		// let daixBalance = wad4human(await daix.balanceOf(irrigateAddress))
 		return daixBalance
 	},
 
 	sfAppGetDaiBalance: async () => {
-		let daiBalance = wad4human(await dai.balanceOf(irrigateAddress))
+		// let daiBalance = wad4human(await dai.balanceOf(irrigateAddress))
 		return daiBalance
 	},
 
@@ -158,11 +158,11 @@ module.exports = {
 	},
 
 	sfDowngradeTotal: async (_causeAddress) => {
-		const causeBalance = wad4human(await daix.balanceOf(_causeAddress))
+		// const causeBalance = wad4human(await daix.balanceOf(_causeAddress))
 		console.log("Cause balance",causeBalance, "daix")
 		await daix.downgrade(web3.utils.toWei(causeBalance, "ether"), { from: _causeAddress })
 		console.log(causeBalance, "daix downgraded")
-		const causeBalanceDai = wad4human(await dai.balanceOf(_causeAddress))
+		// const causeBalanceDai = wad4human(await dai.balanceOf(_causeAddress))
 		console.log("New cause Dai balance: ",causeBalanceDai)
 	},
 

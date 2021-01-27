@@ -16,7 +16,6 @@
   "author": "raphaelpg",
   "license": "ISC",
   "dependencies": {
-    "@decentral.ee/web3-helpers": "^0.3.4",
     "@superfluid-finance/ethereum-contracts": "^0.1.2-preview-20201014-fix5",
     "@truffle/contract": "^4.2.30",
     "@truffle/hdwallet-provider": "^1.2.0",
@@ -34,9 +33,6 @@
     "node-sass": "^4.14.1",
     "pm2": "^4.4.0",
     "web3": "^1.2.9"
-  },
-  "devDependencies": {
-    "@openzeppelin/test-helpers": "^0.5.9"
   },
   "engines": {
     "node": "12.x"
